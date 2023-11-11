@@ -72,6 +72,19 @@ const WorldCup = () => {
 
   return (
     <>
+    <Modal
+    isOpen = {modalIsOpen}
+    contentLabel='모달'
+    className= 'Modal'>
+      <div className='overlap-group' onClick={closeModal}>
+        <div className='rectangle'></div>
+        <div className='text-wrapper'>시작</div>
+      </div>
+      <Link to = "/">
+    <img className='reject' src = "https://i.ibb.co/YZbWQM5/reject.png"></img>
+    </Link>
+    <div class="modal_worldcup">월드컵</div>
+    </Modal>
       <h1 className="worldcup_title">월드컵</h1>
       <div className="dotted-line-container">
         <div className="dotted-line" />
