@@ -108,7 +108,7 @@
 .worldcup_frame{
     position: absolute;
     left: 50%;
-    top: 240px;
+    top: 270px;
     transform: translateX(-50%);
     display: flex;
     flex-wrap: wrap;
@@ -130,21 +130,6 @@
     border-color: #5d5a5a;
     background-color: #ffffff;
     z-index: 10;
-}
-.hide{
-    top: 240px;
-    left: 50%;
-    transform: translateX(-50%);
-    flex-basis: auto;
-    position: relative;
-    align-items: center;
-    text-align: center;
-    width:340px;
-    height:420px;
-    border: 5px solid;
-    border-color: #5d5a5a;
-    background-color: #ffffff;
-    z-index: 25;
 }
 
 .worldcup_frame .worldcup_card .worldcup_image{

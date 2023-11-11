@@ -114,7 +114,7 @@ const WorldCup = () => {
             style={{
               overlay: {
                 position: 'fixed',
-                top: 0,
+                top: 80,
                 left: 0,
                 right: 0,
                 bottom: 0,
