@@ -1,0 +1,107 @@
+.fixed-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cardlist {
+  margin-bottom: 50px;
+  margin-top: 50px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+#boardTable input {
+  width: 100%;
+  text-align: center;
+  min-height: 5vh;
+}
+
+#boardTable textarea {
+  width: 100%;
+  text-align: center;
+}
+
+#boardTable td {
+  text-align: center;
+  align-items: center;
+  width: 80vw;
+}
+#boardTable th {
+  text-align: center;
+  align-items: center;
+  font-size: 22px;
+  width: 21vw;
+}
+#boardTable {
+  border-collapse: separate;
+  border-spacing: 2vw 2vh; /* 3% of the viewport width and 3% of the viewport height */
+  text-align: center;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+}
+
+#boardTable img {
+  width: 200px;
+  object-fit: cover;
+}
+
+hr {
+  height: 1px;
+  border-top: 4px dashed #2ccec9;
+  z-index: 200;
+  opacity: 1;
+}
+
+#boardModal {
+  width: 50%;
+  margin: auto;
+}
+#boardModal button {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2ccec9;
+  color:#ffffff;
+  border: none;
+  width: 10vw;
+  height: fit-content;
+  font-size: 30px;
+  border-radius: 5px;
+  font-family: 'ELAND_Nice_M';
+}
+
+@font-face {
+  font-family: 'ELAND_Nice_M';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/ELAND_Nice_M.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+.reject_board {
+  cursor: pointer;
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  top: 10px;
+  right: 20px;
+}
+
+h1 {
+  font-family: 'KOTRA_GOTHIC';
+  font-size: 40px;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'KOTRA_GOTHIC';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/KOTRA_GOTHIC.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
