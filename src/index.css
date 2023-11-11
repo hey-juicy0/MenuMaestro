@@ -1,0 +1,148 @@
+@font-face {
+  font-family: 'KOTRA_GOTHIC';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/KOTRA_GOTHIC.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans KR', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;900&display=swap');
+}
+@font-face {
+  font-family: 'ELAND_Nice_M';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/ELAND_Nice_M.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.App {
+  height: 100vh;
+}
+
+.nav-menu-image-container > a{
+  width: 120px;
+  display: flex;
+  margin-right: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  color: white;
+  font-size: 16px;
+}
+
+.nav-menu-image{
+  width: 50px;
+  height: 50px;
+}
+
+.section_title{
+  position: absolute;
+  top:100px;
+  overflow: auto;
+  font-family: 'KOTRA_GOTHIC';
+  font-size: 40px;
+  font-weight: 400;
+  color: #222222;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.text-center{
+  position: absolute;
+  top:230px;
+  left: 50%;
+  transform: translateX(-50%);
+  width:340px;
+  height:420px;
+  border: 5px solid;
+  border-color: #5d5a5a;
+}
+
+
+.random-current-menu-image{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}
+
+.show {
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.card-body {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.card-text {
+  margin-top: 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #222222;
+  letter-spacing: 0;
+  line-height: normal;
+
+}
+.reset{
+  margin-left: 320px;
+  display: block;
+  width: 50px;
+  position: absolute;
+  top:-10px;
+}
+.dotted-line-container{
+  width:350px;
+  position: absolute;
+  top: 160px;
+  display: flex;
+  justify-content: flex-start;
+}
+.dotted-line-container .dotted-line{
+  
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px; /* Adjust the width as needed */
+  height: 1px;
+  border-top: 4px dashed rgb(67, 200, 208); /* 1px width, dotted style, and black color */
+}
+
+.random-menu-description {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  align-items: center;
+  font-size: 24px;
+  line-height: normal;
+  white-space:nowrap;
+  left: 50%;
+  top: 700px;
+  position: absolute;
+  overflow: auto;
+  transform: translateX(-50%);
+}
+
+.random-menu-description button{
+  background-color: transparent;
+  border: none;
+}

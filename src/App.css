@@ -1,0 +1,141 @@
+/* 네비바 css */
+.nav-layout {
+  background-color: #2ccec9 !important;
+  height: 80px;
+  display: flex; /* 요소들을 가로로 나열합니다. */
+  justify-content: space-between; /* 요소들을 양 끝으로 밀어 넣습니다. */ /* 요소들을 세로 중앙에 정렬합니다. */
+  align-items: left;
+  
+}
+
+.main-bg {
+  height : 800px;
+  background-size : cover;
+  background-position : center;
+  margin-top: 50px;
+}
+
+.modal{
+  margin-top : 20px;
+  padding : 20px;
+  background : #eee;
+  text-align : left;
+}
+
+.menumaestro {
+  float: left;
+  margin-top: 20px;
+  height: 123px;
+  position: absolute;
+  left: 2%;
+  font-family: 'Yeongdo-Rg';
+  font-weight: 400;
+  font-size: 70px;
+  white-space: nowrap;
+  color: white;
+  text-align: center;
+  letter-spacing: 0;
+  cursor: pointer;
+
+}
+
+/* 메인 홈페이지 CSS */
+
+@font-face {
+  font-family: 'Yeongdo-Rg';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/Yeongdo-Rg.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans KR', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;900&display=swap');
+}
+
+@font-face {
+  font-family: 'Orbit-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/Orbit-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'KOTRA_GOTHIC';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/KOTRA_GOTHIC.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo{
+    animation: App-logo-spin 3s linear;
+  }
+}
+@keyframes App-logo-spin {
+  from {
+      transform: rotate(0deg);
+  }
+
+  to {
+      transform: rotate(360deg);
+  }
+}
+
+.logo_frame {
+  top: 90px;
+  position: absolute;
+  width: 272px;
+  height: 183px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  background-image: url("https://i.ibb.co/ZKnsPMq/1.png");
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.logo {
+  margin-top: 23px;
+  width: 63px;
+  height: 63px;
+  overflow: auto;
+  text-align: center;
+  object-fit: cover;
+}
+
+.text_info {
+  position: absolute;
+  width: 621px;
+  height: 23px;
+  top: 300px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Orbit-Regular';
+  color: #000000;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.info {
+  position: absolute;
+  width: 700px;
+  height: 306px;
+  top: 355px;
+  left: 50%;
+  transform: translateX(-50%);
+  object-fit: cover;
+}
+.nav-menu-image-container:first-child {
+  margin-left: 100%;
+}
+.memberinfo{
+  position: fixed;
+  left: 2%;
+  bottom: 3%;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+}

@@ -1,0 +1,228 @@
+@font-face {
+    font-family: 'KOTRA_GOTHIC';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/KOTRA_GOTHIC.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Noto Sans KR', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;900&display=swap');
+}
+
+@font-face {
+    font-family: 'ELAND_Nice_M';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/ELAND_Nice_M.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.worldcup_title {
+    position: absolute;
+  top:100px;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: auto;
+  font-family: 'KOTRA_GOTHIC';
+  font-size: 40px;
+  font-weight: 400;
+  color: #222222;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: normal;
+
+}
+
+.Modal {
+    background-color: #ffffff;
+    z-index: 50;
+    position: fixed;
+    overflow: auto;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 400px;
+    box-shadow: 0px 0px 10px #d3d3d3;
+    border-radius: 20px;
+}
+
+.overlap-group {
+    cursor: pointer;
+    position: absolute;
+    width: 190px;
+    height: 80px;
+    top: 233px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.rectangle {
+    position: absolute;
+    width: 190px;
+    height: 70px;
+    top: 0;
+    left: 0;
+    background-color: #2ccec9;
+    border-radius: 10px;
+}
+
+.text-wrapper {
+    top: -10px;
+    left: 35px;
+    color: #ffffff;
+    font-size: 64px;
+    text-align: center;
+    position: absolute;
+    font-family: 'ELAND_Nice_M';
+    letter-spacing: 0;
+}
+
+.reject {
+    cursor: pointer;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: 6px;
+    left: 531px;
+    object-fit: cover;
+}
+
+.modal_worldcup {
+    top: 89px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #000000;
+    font-size: 100px;
+    white-space: nowrap;
+    position: absolute;
+    font-family: 'ELAND_Nice_M';
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.worldcup_frame{
+    position: absolute;
+    left: 50%;
+    top: 240px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 300px;
+    -webkit-box-pack: justify;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.worldcup_frame .worldcup_card{
+    flex-basis: auto;
+    position: relative;
+    align-items: center;
+    text-align: center;
+    width:340px;
+    height:420px;
+    border: 5px solid;
+    border-color: #5d5a5a;
+    background-color: #ffffff;
+    z-index: 10;
+}
+.hide{
+    top: 240px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-basis: auto;
+    position: relative;
+    align-items: center;
+    text-align: center;
+    width:340px;
+    height:420px;
+    border: 5px solid;
+    border-color: #5d5a5a;
+    background-color: #ffffff;
+    z-index: 25;
+}
+
+.worldcup_frame .worldcup_card .worldcup_image{
+    width: 300px;
+    height: 300px;
+    margin-top: 30px;
+}
+
+.worldcup_frame .worldcup_card .worldcup_text{
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: #222222;
+    letter-spacing: 0;
+    line-height: normal;
+    margin-top: 20px;
+}
+
+
+.worldcup_frame .vs {
+    position: fixed;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 143px;
+    font-family: 'ELAND_Nice_M';
+    color: #222222;
+    font-size: 130px;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+    z-index: -1;
+}
+
+.worldcup_round{
+    transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    top:180px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 40px;
+    font-weight: 500;
+    z-index: -1;
+
+}
+.worldcup_finalround{
+    transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    top:180px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 100px;
+    font-weight: 500;
+    z-index: -1;
+}
+
+.reset{
+    margin-left: 320px;
+    display: block;
+    width: 50px;
+    position: absolute;
+    top:-10px;
+  }
+  .dotted-line-container{
+    left: 50%;
+    transform: translateX(-50%);
+    width:350px;
+    position: absolute;
+    top: 160px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .dotted-line-container .dotted-line{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px; /* Adjust the width as needed */
+    height: 1px;
+    border-top: 4px dashed rgb(67, 200, 208); /* 1px width, dotted style, and black color */
+  }
