@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react';
-import { getDatabase, ref, get, update } from 'firebase/database';
+import React, { useState, useEffect } from 'react';
+import { ref, get } from 'firebase/database';
 import { useDatabase } from '../contexts';
-import { onValue } from "firebase/database";
-import { Category } from '../utils';
+import { Link, Route, Routes } from 'react-router-dom';
 
 import '../css/category.css'
+import SubCategory from "./SubCategory.js";
+
 
 function MenuReCommend() {
 
@@ -17,7 +18,6 @@ function MenuReCommend() {
   const [selectedMenu, setSelectedMenu] = useState(null); // 선택된 메뉴를 저장
 
   // menus 리스트
-  const randomMenu = menus.length > 0 ? menus[1] : null; // 랜덤으로 선택한 메뉴
   const baseCategory = [ "한식", "중식", "일식", "아시안식", "상관 없음"]; // 1차 카테고리
 
   // 1차 카테고리 선택: 국가
@@ -41,15 +41,23 @@ function MenuReCommend() {
     }
   };
 
+  
   return (
     <div>
         <center><h2>메뉴 추천</h2></center>
       <ul>
         {baseCategory.map((baseCategory, index) => (
-          <li key={index} onClick={() => selectBaseCategory(baseCategory)}>{baseCategory}</li>
+          <li key={index}>
+            <Link to= {`/baseCategory/${baseCategory}`}onClick={() => selectBaseCategory(baseCategory)}>{baseCategory}
+            </Link>
+          </li>
         ))}
       </ul>
+<Routes>
+      <Route path="/baseCategory/:baseCategory" component={SubCategory} />
+      </Routes>
     </div>
-  )  
+  );  
 } 
+
 export default MenuReCommend;
