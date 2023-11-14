@@ -41,6 +41,28 @@ function MenuReCommend() {
     }
   };
 
+  // 2차 카테고리 선택: 음식 종류
+  const selectSubCategory = (category) => {
+    setSelectedCategory(category);
+      
+    if(menus.length > 0) { // 1차 카테고리 선택에 맞추어 메뉴 필터링
+        // 해당 카테고리(type)에 맞는 메뉴들만 필터링하여 메뉴 목록 재작성
+        selectedMenu = menus.filter(menus => menus.type === category);
+        setMenus(selectedMenu);
+    }
+
+    consolg.log("2차 카테고리 선택 확인");
+  }
+
+
+  //최종 선택된 카테고리 중 랜덤으로 메뉴 출력
+  const selectRandomMenu = () => {
+    if(menus.length > 0) {
+      const randomIndex = Math.floor(Math.random() * menus.length);
+      const randomMenu = menus[randomIndex];
+      setSelectedMenu(randomMenu);
+    }
+  }
   
   return (
     <div>
