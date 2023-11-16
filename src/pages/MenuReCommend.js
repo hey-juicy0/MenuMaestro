@@ -46,9 +46,12 @@ function MenuReCommend() {
 
   // 상태 변수 목록
   const [menus, setMenus] = useState([]);                               // 선택 연산에 사용할 메뉴 목록
-  const [selectedCategory, setSelectedCategory] = useState(null);       // 선택된 카테고리를 저장
-  const [selectedSubCategory, setSelectedSubCategory] = useState(null); // 선택된 하위 카테고리 저장
+  
+  const [selectedCategory, setSelectedCategory] = useState(null);       // 선택한 1차 카테고리를 저장
   const [subcategories, setSubcategories] = useState([]);               // 하위 카테고리 종류 설정
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null); // 선택된 하위 카테고리 저장
+
+  const [finalList, setFinalList] = useState([]);                       // 최종 필터링 결과를 저장하는 목록
   const [finalMenu, setFinalMenu] = useState(null);                     // 최종 추천 메뉴 무작위 선정
   const [showFinalCard, setShowFinalCard] = useState(false);            // 최종 추천 메뉴 창 보임 상태
 
@@ -106,25 +109,29 @@ function MenuReCommend() {
   // 2차 카테고리 선택에 따른 메뉴 필터링
   useEffect(() => {
     if(selectedSubCategory !== null) {                          // subcategory가 선택된 상태면
-      const filteredMenus = selectedCategory === "상관없음" ?
-      menus.filter(menus => menus.type === selectedCategory)    // 선택한 type에 맞는 메뉴들만 필터링
-      : menus.filter(menus => menus.nation === selectedCategory && menus.type === selectedSubCategory)
-      setMenus(filteredMenus);                                  // menus 갱신
-      console.log("2차 카테고리 선택 확인");                      // 정상 동작 확인용 콘솔 출력
+      let filteredMenus = [];
+      if (selectedCategory === "상관없음")
+        filteredMenus = menus.filter(menu => menu.type === selectedSubCategory);    // 선택한 type에 맞는 메뉴들만 필터링
+      else {
+        filteredMenus = menus.filter(menu => menu.type === selectedSubCategory && menu.nation === selectedCategory)
+      }                        // menus 갱신
+      setFinalList(filteredMenus);       
+
     }
-  }, [selectedSubCategory]);
+  }, [selectedSubCategory, menus]);
 
   // 2차 카테고리 온클릭 메소드
-  const selectSubCategory = (category) => {
-    setSelectedSubCategory(category);  // 서브 카테고리 선택 저장
-    showFinalMenu();                   // 최종 추천 메뉴 창 보이기
+  const selectSubCategory = (index) => {
+    setSelectedSubCategory(subcategories[index]);  // 서브 카테고리 선택 저장
+    showFinalMenu(finalList);                   // 최종 추천 메뉴 창 보이기
   }
 
   // 최종 추천 메뉴를 랜덤으로 선정
-  const showFinalMenu = () => {
-    if(menus.length > 0) {
+  const showFinalMenu = (finalList) => {
+    console.log(finalList);
+    if(finalList.length > 0) {
       const randomIndex = Math.floor(Math.random() * menus.length);
-      const randomMenu = menus[randomIndex];
+      const randomMenu = finalList[randomIndex];
       setFinalMenu(randomMenu);
       setShowFinalCard(true);
     }
@@ -152,16 +159,18 @@ function MenuReCommend() {
                 {category}</li>
             ))}
           </ul>
+          <p></p>
           <ul>
           {subcategories.map((subcategory, index) => (
-          <li key={index} onClick={() => selectSubCategory(subcategory)}>
+          <li key={index} onClick={() => selectSubCategory(index)}>
             {subcategory}</li> ))}
           </ul>
           {finalMenu && showFinalCard && (
             <Show currentMenu={finalMenu} 
             upvote={() => upvote(finalMenu)} 
             reset={()=> {pickCurrentMenu({data:menus, force: true})}}
-            onClose={closeCard} />
+            onClose={closeCard} 
+            showCard={showFinalCard}/>
           )}
     </div>
   );  
