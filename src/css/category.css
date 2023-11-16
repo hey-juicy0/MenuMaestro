@@ -1,0 +1,29 @@
+ul {
+    list-style: none;
+    margin: 0 auto;
+    padding-left: 0;
+
+    border: 3px solid #333;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+    height: 320px;
+    
+    font-size: 24pt;
+}
+
+ul li {
+    list-style: none;
+    border-bottom: 2px dashed #333;
+    text-align: center;
+    
+    max-height: 350px;
+    padding: 2px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
