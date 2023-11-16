@@ -1,83 +1,168 @@
 import React, { useState, useEffect } from 'react';
 import { ref, get } from 'firebase/database';
 import { useDatabase } from '../contexts';
-import { Link, Route, Routes } from 'react-router-dom';
+import { getTodayReadable} from '../utils';
+
+import Card from 'react-bootstrap/Card';
 
 import '../css/category.css'
-import SubCategory from "./SubCategory.js";
+
+// 음식 카드
+function Show({currentMenu, upvote, reset, onClose }) {
+  const [showCard, setShowCard] = useState(true);
+
+  const close = () => {
+    setShowCard(false);
+    onClose();
+  }
+  return (
+    <>
+      <div style={{width: '600px', backgroundColor: 'white'}}>
+        <Card className="text-center">
+          <Card.Body>
+            <Card.Title><img className="random-current-menu-image" src={currentMenu.url} alt="food"/></Card.Title>
+            <Card.Text>{currentMenu.name}</Card.Text>
+            <span style={{cursor: "pointer", color: "blue", textDecoration:"underline"}}onClick={close}> 닫기 </span>
+          </Card.Body>
+        </Card>
+        <p className="random-menu-description">
+          오늘({getTodayReadable()}) {currentMenu.vote}회의 추천을 받았습니다 &nbsp;
+          <img src = "https://i.ibb.co/4VXmN4x/like-1.png" width={"40px"} onClick={upvote}/>
+        </p>
+                {/* <button onClick={()=> initiateData()}>초기화</button>
+          <Card.Footer className="text-muted">
+            <button type="button" onClick={upvote}>좋아요</button>
+            <button type="button" onClick={reset}>다른거</button>
+          </Card.Footer> */}
+        </div>
+    </>
+  );
+}
 
 
 function MenuReCommend() {
-
   const { database } = useDatabase();   // 데이터베이스 가져오기
   const dbRef = ref(database, 'menus'); // 'menus' 참조 생성
 
   // 상태 변수 목록
-  const [menus, setMenus] = useState([]); // 메뉴 목록 저장
-  const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 카테고리를 저장
-  const [selectedMenu, setSelectedMenu] = useState(null); // 선택된 메뉴를 저장
+  const [menus, setMenus] = useState([]);                               // 선택 연산에 사용할 메뉴 목록
+  const [selectedCategory, setSelectedCategory] = useState(null);       // 선택된 카테고리를 저장
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null); // 선택된 하위 카테고리 저장
+  const [subcategories, setSubcategories] = useState([]);               // 하위 카테고리 종류 설정
+  const [finalMenu, setFinalMenu] = useState(null);                     // 최종 추천 메뉴 무작위 선정
+  const [showFinalCard, setShowFinalCard] = useState(false);            // 최종 추천 메뉴 창 보임 상태
 
-  // menus 리스트
-  const baseCategory = [ "한식", "중식", "일식", "아시안식", "상관 없음"]; // 1차 카테고리
+  const baseCategory = [ "한식", "중식", "일식", "아시안식", "상관없음"]; // 1차 카테고리
 
-  // 1차 카테고리 선택: 국가
-  const selectBaseCategory = async (category) => {
-    setSelectedCategory(category); // 선택 카테고리 업데이트
-
-    try {
-      const snapshot = await get(dbRef); // 메뉴 전체를 일시적으로 snapshot
-      if(snapshot.exists()) {            // snapshot이 존재하면
-        const data = snapshot.val();
-
-        // 해당 카테고리(국적)에 맞는 메뉴들만 필터링하여 메뉴 목록 재작성
-        const filteredMenus = data.filter(menu => menu.nation === category);
-        setMenus(filteredMenus);
-        
-        // 동작 확인용 출력
-        console.log("1차 카테고리 선택");
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
+  // 1차 카테고리 세팅
+  useEffect(() => { 
+    if(selectedCategory) {                     // 선택된 1차 카테고리가 있으면
+      get(dbRef, 'menus').then((snapshot) => { // 전체 데이터베이스 참조, 스냅샷 생성
+        if(snapshot.exists()) {                // 일시적 변수 데이터에 스냅샷 value를 복사한 뒤
+          const data = snapshot.val();         // 선택한 카테고리에 포함된 메뉴들만 필터링
+          const filteredMenus = selectedCategory === "상관없음" ? data : data.filter(menus => menus.nation === selectedCategory);
+          setMenus(filteredMenus); // menus 갱신
+        }
+      }).catch(error => {
+        console.error("Error fetching menus:", error);
+      });
     }
-  };
+  }, [dbRef, selectedCategory]); // 카테고리 선택 변경 시마다 작동
 
-  // 2차 카테고리 선택: 음식 종류
-  const selectSubCategory = (category) => {
-    setSelectedCategory(category);
-      
-    if(menus.length > 0) { // 1차 카테고리 선택에 맞추어 메뉴 필터링
-        // 해당 카테고리(type)에 맞는 메뉴들만 필터링하여 메뉴 목록 재작성
-        selectedMenu = menus.filter(menus => menus.type === category);
-        setMenus(selectedMenu);
+
+  // 2차 카테고리 세팅
+  const setSubCategories = selectedCategory => {
+    switch(selectedCategory) { // 선택한 1차 카테고리 종류에 따라 2차 카테고리 분류를 변경
+      case '한식':
+          setSubcategories(['밥류', '면류', '찌개류', '육류', '기타']);
+          break;
+      case '중식':
+          setSubcategories(['밥류', '면류', '탕류', '육류', '해산물류']);
+          break;
+      case '양식':
+          setSubcategories(['밥류', '면류', '빵류', '육류', '해산물류']);
+          break;
+      case '일식':
+          setSubcategories(['밥류', '면류', '해산물류', '육류', '기타']);
+          break;
+      case '아시안식':
+          setSubcategories(['밥류', '면류', '국물류', '육류', '기타']);
+          break;
+      case '상관없음':
+          setSubcategories(['밥류', '면류', '빵류', '찌개류', '탕류', '국물류', '육류', '해산물류', '기타']);
+          break;
+            
+            default: return[];
     }
-
-    consolg.log("2차 카테고리 선택 확인");
   }
 
+  // 1차 카테고리 온클릭 메소드
+  const selectCategory = (category) => {
+    setSelectedCategory(category); // baseCategory 선택
+    setSubCategories(category);    // subcategories 설정
+  }
 
-  //최종 선택된 카테고리 중 랜덤으로 메뉴 출력
-  const selectRandomMenu = () => {
+  
+  // 2차 카테고리 선택에 따른 메뉴 필터링
+  useEffect(() => {
+    if(selectedSubCategory !== null) {                          // subcategory가 선택된 상태면
+      const filteredMenus = selectedCategory === "상관없음" ?
+      menus.filter(menus => menus.type === selectedCategory)    // 선택한 type에 맞는 메뉴들만 필터링
+      : menus.filter(menus => menus.nation === selectedCategory && menus.type === selectedSubCategory)
+      setMenus(filteredMenus);                                  // menus 갱신
+      console.log("2차 카테고리 선택 확인");                      // 정상 동작 확인용 콘솔 출력
+    }
+  }, [selectedSubCategory]);
+
+  // 2차 카테고리 온클릭 메소드
+  const selectSubCategory = (category) => {
+    setSelectedSubCategory(category);  // 서브 카테고리 선택 저장
+    showFinalMenu();                   // 최종 추천 메뉴 창 보이기
+  }
+
+  // 최종 추천 메뉴를 랜덤으로 선정
+  const showFinalMenu = () => {
     if(menus.length > 0) {
       const randomIndex = Math.floor(Math.random() * menus.length);
       const randomMenu = menus[randomIndex];
-      setSelectedMenu(randomMenu);
+      setFinalMenu(randomMenu);
+      setShowFinalCard(true);
     }
   }
-  
+
+  // RandomPick에 정의된 upvote 함수
+  const upvote = (currentMenu) => {
+    const targetMenuIndex= menus.findIndex(menu => menu.name === currentMenu.name)
+    const updated = {...currentMenu, vote: currentMenu.vote+1}
+    const newMenus = [...menus];
+    newMenus.splice(targetMenuIndex, 1, updated)
+    set(ref(database, '/menus'), newMenus);
+  }
+
+  // finalMenu 창 닫기 
+  const closeCard = () => setShowFinalCard(false);
+
+  // 리턴 렌더링 부분
   return (
     <div>
-        <center><h2>메뉴 추천</h2></center>
-      <ul>
-        {baseCategory.map((baseCategory, index) => (
-          <li key={index}>
-            <Link to= {`/baseCategory/${baseCategory}`}onClick={() => selectBaseCategory(baseCategory)}>{baseCategory}
-            </Link>
-          </li>
-        ))}
-      </ul>
-<Routes>
-      <Route path="/baseCategory/:baseCategory" component={SubCategory} />
-      </Routes>
+      <center><h2>메뉴 추천</h2></center>
+        <ul>
+            {baseCategory.map((category, index) => (
+              <li key={index} onClick={()=> selectCategory(category)}>
+                {category}</li>
+            ))}
+          </ul>
+          <ul>
+          {subcategories.map((subcategory, index) => (
+          <li key={index} onClick={() => selectSubCategory(subcategory)}>
+            {subcategory}</li> ))}
+          </ul>
+          {finalMenu && showFinalCard && (
+            <Show currentMenu={finalMenu} 
+            upvote={() => upvote(finalMenu)} 
+            reset={()=> {pickCurrentMenu({data:menus, force: true})}}
+            onClose={closeCard} />
+          )}
     </div>
   );  
 } 
