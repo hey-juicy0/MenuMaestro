@@ -1,18 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import './FoodBoard.css';
 import Modal from 'react-modal';
+import { app } from './Storegy.jsx';
+import { getStorage, ref as storageReference, uploadBytes, getDownloadURL,} from "firebase/storage";
 
-const AddButton = function({ onNewColor = f => f }) {
+const AddButton = function ({ onNewColor = f => f }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [titleValue, setTitleValue] = useState("");
   const [detailValue, setDetailValue] = useState("");
-  let [dateValue, setDateValue] = useState("");
-  const [urlValue, setUrlValue] = useState("");
+  const [dateValue, setDateValue] = useState("");
+  //const [urlValue, setUrlValue] = useState("");
+  //const [imagePreview, setImagePreview] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 모달이 열릴 때 감춰질 요소 설정
-    Modal.setAppElement('#modal-root');
-  }, []);
+  
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+  };
+
+  const uploadImage = async () => {
+    if (selectedImage) {
+      console.log("파일 업로드 시작");
+      const storage = getStorage(app); //스토리지 가져오기
+      const storageRef = storageReference(storage, `/FoodBoard/${selectedImage.name}`);
+      console.log("1번");
+      await uploadBytes(storageRef, selectedImage);
+      console.log("2번");
+      const imageUrl = await getDownloadURL(storageRef);
+      console.log("3번");
+      //setUrlValue(imageUrl);
+      console.log("4번");
+      //setImagePreview(imageUrl);
+      console.log("5번");
+      return imageUrl;
+    }
+    else{
+      console.log("파일이 재대로 전달되지 않음.")
+    }
+  };
+
+  useEffect(() => {  //날짜 자동 입력
+    if (isModalOpen) {
+      const currentDate = new Date().toISOString().slice(0, 10);
+      setDateValue(currentDate);
+    }
+  }, [isModalOpen]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -22,28 +56,17 @@ const AddButton = function({ onNewColor = f => f }) {
     setModalOpen(false);
   };
 
-  const handleSubmit = () => {
-    if (!titleValue) {
-      alert("제목을 입력하세요!");
-      return;
-    }
-    else if(!urlValue){
-      alert("이미지 URL을 입력하세요!");
-      return;
-    }
-    // 제출 버튼이 클릭되었을 때 수행할 작업 추가
-    dateValue = document.getElementById("date").value;
-  console.log("Title:", titleValue);
-  console.log("Detail:", detailValue);
-  console.log("Date:", dateValue);
-  onNewColor(titleValue, detailValue, dateValue, urlValue);
-  setTitleValue("");
-  setDetailValue("");
-  setDateValue("");
-  closeModal(); // 모달 닫기
-
-  // 페이지 새로고침
-  window.location.reload();
+  const handleSubmit = async () => {
+    let URL = await uploadImage();
+    console.log("사진 업로드 끝. url 얻어옴. URL = " + URL);
+    onNewColor(titleValue, detailValue, dateValue, URL);
+    console.log("OnNewColor에 집어넣음. ");
+    setTitleValue("");
+    setDetailValue("");
+    setDateValue("");
+    //setUrlValue("");
+    //setImagePreview("");
+    closeModal();
   };
 
   const handleTitleChange = (e) => {
@@ -57,29 +80,17 @@ const AddButton = function({ onNewColor = f => f }) {
   const handleDateChange = (e) => {
     setDateValue(e.target.value);
   };
-  const handleUrlChange = (e) => {
-    setUrlValue(e.target.value);
-  };
-  const getCurrentDate = () =>
-  {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    
 
-    /*
-    if (hours >= 12) {
-      hours = (hours - 12).toString().padStart(2, '0');
-      return `${year}-${month}-${day} 오후 ${hours}:${minutes}:${seconds}`;
-    } else {
-      // 오전인 경우
-      return `${year}-${month}-${day} 오전 ${hours}:${minutes}:${seconds}`;
-    }
-    */
+  // const handleUrlChange = (e) => {
+  //   const imageUrl = e.target.value;
+  //   setUrlValue(imageUrl);
 
-    return `${year}-${month}-${day}`;
-  };
+  //   if (imageUrl.startsWith("http") || imageUrl.startsWith("https")) {
+  //     setImagePreview(imageUrl);
+  //   } else {
+  //     setImagePreview("");
+  //   }
+  // };
 
   return (
     <div id="Foodboard">
@@ -118,33 +129,19 @@ const AddButton = function({ onNewColor = f => f }) {
                 </td>
               </tr>
               <tr>
-                <th>이미지 URL *</th>
+                <th>이미지 파일 업로드</th>
                 <td>
-                  <input
-                    id="url"
-                    type="text"
-                    placeholder="사진 URL 첨부"
-                    value={urlValue}
-                    onChange={handleUrlChange}
-                  />
+                <input type="file" onChange={handleFileChange}></input>
                 </td>
               </tr>
-              <tr>
-                <th>이미지 미리보기</th>
-                <td>
-                  <img
-                    src= {urlValue}
-                    alt="이미지 미리보기"
-                  />
-                  </td>
-              </tr>
+
               <tr>
                 <th>날짜</th>
                 <td>
                   <input
                     id="date"
                     type="text"
-                    value={getCurrentDate()}
+                    value={dateValue}
                     onChange={handleDateChange}
                     disabled
                   />
