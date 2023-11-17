@@ -2,10 +2,12 @@ import logo from './logo.svg';
 import './App.css';
 
 // 상단 메뉴바 코드 
-import {Navbar, Nav, Container} from 'react-bootstrap';
+import { Navbar, Nav, Container, Modal } from 'react-bootstrap';
 
-// 페이지 나누는 라우터 라이브러리
+// 페이지 나누는 라우터 라이브러리와 모달
 import {Routes, Route,  useNavigate  } from 'react-router-dom'
+
+import { ref, get, child, getDatabase } from 'firebase/database';
 
 // 각 페이지 컴포넌트
 import RandomPick from './pages/RandomPick';
@@ -14,19 +16,109 @@ import MenuReCommend from './pages/MenuReCommend';
 import WorldCup from './pages/WorldCup';
 import MenuAdd from './pages/MenuAdd';
 import MemberInfo from './pages/MemberInfo'; 
-import RankingComponent from './pages/WorldRank';
 
-import { useState } from 'react';
+import { useState, useDatabase, useEffect } from 'react';
 import { DatabaseProvider } from './contexts';
 
 function App() {
 
-  // 상단 네비바->해당경로로 이동해주도록 변수에 저장
+  const [menus, setMenus] = useState([]);
+  const db = getDatabase();
+   // 상단 네비바->해당경로로 이동해주도록 변수에 저장
   let navigate = useNavigate()
-  
-  // 랜덤추천, 월드컵, 메뉴추천.js에서 사용할 상태변수 
+
+   // 랜덤추천, 월드컵, 메뉴추천.js에서 사용할 상태변수 
   let [userPick, setUserPick] = useState(0);
 
+ // 모달의 표시 여부 상태 변수
+  let [showModal, setShowModal] = useState(true);
+
+  //오늘 하루 보지 않음 상태 변수
+  const [doNotShowToday, setDoNotShowToday] = useState(false);
+  
+
+  //데이터 베이스에서 데이터 배열로 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      const dbRef = ref(db, 'menus');
+      try {
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const dataArray = Object.values(data);
+          setMenus(dataArray);
+        } else {
+          setMenus([]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [db]);
+
+ 
+  const CloseModal= () =>{ //modal.head에서 close 누르면 실행되는 함수. 단순한 모달 닫기
+    setShowModal(false);
+  }
+
+  //체크박스 클릭하면 실행되는 함수
+  const handleClose = () => {
+    setDoNotShowToday(true);
+    setShowModal(false);
+    localStorage.setItem('lastClosedTime', new Date().getTime().toString());
+  };
+
+  const handleCheckboxChange = () => {
+    setDoNotShowToday(!doNotShowToday);
+
+  };
+
+  let menusCheck = () => {  //menus가 null값인지 확인하는 오류검사 코드
+    if (menus.length === 0) {
+      return -1;
+    }
+    else{
+      return 1;
+    }
+  };
+
+  let getRandomNumberArray = () => {  //랜덤 정수를 가지는 배열 리턴하는 함수. 오늘의 추천 메뉴에 쓰임.
+    if (menus.length === 0) {
+      return [];
+    }
+  
+    const getRandomNumber = () => Math.floor(Math.random() * menus.length);
+  
+    const uniqueRandomNumbers = new Set();
+  
+    while (uniqueRandomNumbers.size < 3) {
+      uniqueRandomNumbers.add(getRandomNumber());
+    }
+  
+    return Array.from(uniqueRandomNumbers);
+  };
+
+  const ArraymenuIndex = getRandomNumberArray();  //랜덤 정수 3개를 가지는 배열
+
+  //이 부분 있으면 하룻동안 모달창 안뜸.
+  useEffect(() => {
+    const lastClosedTimeString = localStorage.getItem('lastClosedTime');
+    if (lastClosedTimeString) {
+      const lastClosedTimeValue = parseInt(lastClosedTimeString, 10);
+      const currentTime = new Date().getTime();
+      const timeDifference = currentTime - lastClosedTimeValue;
+  
+      const timeInterval = 10000; // 10 * 1000;   // 시간 ms
+  
+      if (timeDifference < timeInterval && !doNotShowToday) {
+        setShowModal(false);
+      } else {
+        setShowModal(true);
+      }
+    }
+  }, []);
 
   return (
     <DatabaseProvider>
@@ -39,7 +131,7 @@ function App() {
               <Nav.Link onClick={()=> {navigate('/MenuRecommend')}}>
               <img 
                 className='nav-menu-image' 
-                src="https://i.ibb.co/Tbvs0J9/like.png" alt="" />메뉴 추천</Nav.Link>
+                src="https://i.ibb.co/Tbvs0J9/like.png" alt="" />메뉴추천</Nav.Link>
               </div>
               <div className='nav-menu-image-container' title="랜덤 추천 화면으로 이동">
                 <Nav.Link onClick={()=> {navigate('/RandomPick')}}>
@@ -74,10 +166,44 @@ function App() {
             </Nav>
           </Container>
         </Navbar> 
-        <img className='memberinfo' title="운영 단원 소개"
+        <img className='memberinfo'title="운영 단원 소개"
           onClick={()=> {navigate('/MemberInfo')}}
           src="https://i.ibb.co/qWjYTwK/info-button-1.png"
         />
+
+        <Modal show={showModal} onHide={CloseModal} width="1000px">
+          <Modal.Header closeButton>
+            <Modal.Title>오늘의 추천 메뉴!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <table>
+              <tr>
+              {[0, 1, 2].map((index) => (
+          <td>
+            {menusCheck() !== -1 && (
+              <img src={menus[ArraymenuIndex[index]].url} width="150px" height="150px" alt={`Menu ${index + 1}`} />
+            )}
+          </td>
+        ))}
+              </tr>
+              <tr>
+              {[0, 1, 2].map((index) => (
+          <td>
+            <center>
+            {menusCheck() !== -1 && (
+              <p style={{ fontSize: '15px', fontWeight: 'bold' }}>{menus[ArraymenuIndex[index]].name}</p>
+            )}
+            </center>
+          </td>
+        ))}
+              </tr>
+            </table>
+            { <div>
+              <input type="checkbox" checked={handleCheckboxChange} onChange={handleClose} />
+              <label>오늘 하루 보지 않음</label>
+            </div> }
+          </Modal.Body>
+        </Modal>
 
         <Routes>
           <Route path='/' element={<Main />} />
@@ -87,7 +213,6 @@ function App() {
           <Route path='/FoodBoard' element={<FoodBoard />} />
           <Route path='/MenuAdd' element={<MenuAdd />} />
           <Route path='/MemberInfo' element={<MemberInfo />} />
-          <Route path='/WorldRank' element={<RankingComponent type="rankCount" />}/>
 
         </Routes>
     </div>
@@ -97,7 +222,7 @@ function App() {
 
 function Main() {
   return(
-    <div className="main-bg">
+    <div className="main-bg" style={{marginTop: "50px"}}>
     <div className="container">
       <div className="logo_frame">
         <img className="logo" src="https://i.ibb.co/BLr11Tv/2.png" alt="Logo" />
