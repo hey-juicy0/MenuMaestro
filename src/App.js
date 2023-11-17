@@ -19,6 +19,7 @@ import MemberInfo from './pages/MemberInfo';
 
 import { useState, useDatabase, useEffect } from 'react';
 import { DatabaseProvider } from './contexts';
+import WorldRank from './pages/WorldRank';
 
 function App() {
 
@@ -171,7 +172,7 @@ function App() {
           src="https://i.ibb.co/qWjYTwK/info-button-1.png"
         />
 
-        <Modal show={showModal} onHide={CloseModal} width="1000px">
+        <Modal className = "randomModal" show={showModal} onHide={CloseModal} width="1000px">
           <Modal.Header closeButton>
             <Modal.Title>오늘의 추천 메뉴!</Modal.Title>
           </Modal.Header>
@@ -213,6 +214,7 @@ function App() {
           <Route path='/FoodBoard' element={<FoodBoard />} />
           <Route path='/MenuAdd' element={<MenuAdd />} />
           <Route path='/MemberInfo' element={<MemberInfo />} />
+          <Route path='/WorldRank' element={<WorldRank />}/>
 
         </Routes>
     </div>
@@ -222,7 +224,7 @@ function App() {
 
 function Main() {
   return(
-    <div className="main-bg" style={{marginTop: "50px"}}>
+    <div className="main-bg">
     <div className="container">
       <div className="logo_frame">
         <img className="logo" src="https://i.ibb.co/BLr11Tv/2.png" alt="Logo" />

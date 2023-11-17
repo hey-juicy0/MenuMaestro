@@ -19,7 +19,6 @@ const closeModal = () => {
 return (
         <div> 
             <center>
-
             <Card className="card-center" onClick={openModal} style={{ width: '400px', height: '400px' }}>
         <Card.Body>
           <Card.Title><img className="card-menu-image" src={src} alt="..." style={{ width: '300px', height: '300px', objectFit: 'cover'}} /></Card.Title>
@@ -27,7 +26,7 @@ return (
         </Card.Body>
       </Card>
 
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+      <Modal className = "board_modal" isOpen={modalIsOpen} onRequestClose={closeModal}>
   <center>
     <h2>{title}</h2>
     <p>{detail.split('\n').map((item, key) => {

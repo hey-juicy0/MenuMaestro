@@ -265,14 +265,11 @@ const WorldCup = () => {
               }
             }}
           >
-            <div className='overlap-group' onClick={closeModal}>
-              <div className='rectangle'></div>
-              <div className='text-wrapper'>확인</div>
-            </div>
+            <div className="modal_title">월드컵 결과</div>
+            <button className="rectangle" onClick={closeModal} >확인</button>
             <Link to="/">
               <img className='reject' src="https://i.ibb.co/YZbWQM5/reject.png" alt="reject"></img>
             </Link>
-            <div className="modal_title">월드컵 결과</div>
           </Modal>
   {winningTeamData && (
     <div className="worldcup_frame">

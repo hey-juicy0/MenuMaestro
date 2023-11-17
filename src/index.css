@@ -38,26 +38,6 @@ code {
   position: absolute;
   top:12vh;
 }
-
-.text-center{
-  flex-basis: auto;
-  position: fixed;
-  top:53vh;
-  transform: translateY(-50%);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  text-align: center;
-  width:20vw;
-  height:47vh;
-  border: 0.3vw solid;
-  border-radius: 1vw;
-  border-color: #5d5a5a;
-  background-color: #ffffff;
-  z-index: 10;
-}
-
-
 .random-current-menu-image{
   position:fixed;
   left: 50%;
@@ -67,29 +47,3 @@ code {
   margin-top:3vh;
 }
 
-.show {
-  display: flex;
-  top: 20vh;
-  position: relative;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.card-body {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.card-text {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 5vh;
-  font-weight: 500;
-  color: #595959;
-  letter-spacing: 0;
-  white-space: nowrap;
-  line-height: normal;
-
-}

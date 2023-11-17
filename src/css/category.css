@@ -1,18 +1,18 @@
-ul {
+.recommend ul {
     list-style: none;
     margin: 0 auto;
     padding-left: 0;
-
+    position: relative;
+    top: 20vh;
     border: 3px solid #333;
     border-radius: 10px;
     max-width: 400px;
     width: 100%;
     height: 320px;
-    
     font-size: 24pt;
 }
 
-ul li {
+.recommend ul li {
     list-style: none;
     border-bottom: 2px dashed #333;
     text-align: center;
@@ -23,7 +23,7 @@ ul li {
     margin-bottom: 8px;
 }
 
-a {
+.recommend a {
     text-decoration: none;
     color: #000;
 }

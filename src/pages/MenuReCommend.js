@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ref, get } from 'firebase/database';
+import { ref, get,set } from 'firebase/database';
 import { useDatabase } from '../contexts';
 import { getTodayReadable} from '../utils';
 
@@ -17,7 +17,7 @@ function Show({currentMenu, upvote, reset, onClose }) {
   }
   return (
     <>
-      <div style={{width: '600px', backgroundColor: 'white'}}>
+      <div>
         <Card className="text-center">
           <Card.Body>
             <Card.Title><img className="random-current-menu-image" src={currentMenu.url} alt="food"/></Card.Title>
@@ -151,8 +151,8 @@ function MenuReCommend() {
 
   // 리턴 렌더링 부분
   return (
-    <div>
-      <center><h2>메뉴 추천</h2></center>
+    <div className='recommend'>
+      <div className='section_title'>메뉴 추천</div>
         <ul>
             {baseCategory.map((category, index) => (
               <li key={index} onClick={()=> selectCategory(category)}>

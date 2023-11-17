@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const WorldRank = () => {
   const { database } = useDatabase();
   const [rankings, setRankings] = useState([]);
+  const [startCount, setStartCount] = useState(0);
 
   useEffect(() => {
     const fetchRankings = async () => {
@@ -14,6 +15,7 @@ const WorldRank = () => {
         onValue(startCountsRef, (snapshot) => {
           if (snapshot.exists()) {
             const startCountsData = snapshot.val();
+            setStartCount(startCountsData.count); // Set the startCount value
 
             // 객체를 배열로 변환하고 내림차순 정렬
             const rankingsArray = Object.keys(startCountsData)
@@ -42,13 +44,12 @@ const WorldRank = () => {
     navigate(-1);
   };
 
-
   return (
     <div>
       <div className="section_title">월드컵 순위</div>
       <div className="dotted-line-container">
         <div className="dotted-line" />
-        </div>
+      </div>
       <img className="go_back" src="https://i.ibb.co/cc1sC50/left-arrow.png" onClick={handleBackClick} />
       <div style={{height:'10vh'}}></div>
       <table className="rank_table">
@@ -68,7 +69,7 @@ const WorldRank = () => {
             <tr key={team.name}>
               <td style={{fontWeight:'700'}}>{index + 1}</td>
               <td style={{fontSize: '4vh', fontWeight:'800'}}>{team.name}</td>
-              <td>{team.count}</td>
+              <td>{team.count} / {startCount}</td>
             </tr>
           ))}
         </tbody>
