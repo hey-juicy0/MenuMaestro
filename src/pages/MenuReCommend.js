@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ref, get,set } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { useDatabase } from '../contexts';
-import { getTodayReadable} from '../utils';
+import { getTodayReadable } from '../utils';
 
 import Card from 'react-bootstrap/Card';
 
 import '../css/category.css'
 
 // 음식 카드
-function Show({currentMenu, upvote, reset, onClose }) {
+function Show({currentMenu, upvote, onClose }) {
   const [showCard, setShowCard] = useState(true);
 
   const close = () => {
@@ -17,24 +17,23 @@ function Show({currentMenu, upvote, reset, onClose }) {
   }
   return (
     <>
-      <div>
-        <Card className="text-center">
+        <Card className='recommend_card'>
           <Card.Body>
-            <Card.Title><img className="random-current-menu-image" src={currentMenu.url} alt="food"/></Card.Title>
-            <Card.Text>{currentMenu.name}</Card.Text>
-            <span style={{cursor: "pointer", color: "blue", textDecoration:"underline"}}onClick={close}> 닫기 </span>
+            <Card.Title>
+            <img className='close' src="https://i.ibb.co/YZbWQM5/reject.png" onClick={close} alt="reject"></img>
+              <img className='recommend_image' src={currentMenu.url} alt="food"/></Card.Title>
+            <Card.Text className='recommend_text'>{currentMenu.name}</Card.Text>
           </Card.Body>
         </Card>
-        <p className="random-menu-description">
+        <p style={{backgroundColor:'white'}} className="random-menu-description">
           오늘({getTodayReadable()}) {currentMenu.vote}회의 추천을 받았습니다 &nbsp;
-          <img src = "https://i.ibb.co/4VXmN4x/like-1.png" width={"40px"} onClick={upvote}/>
+          <img src = "https://i.ibb.co/4VXmN4x/like-1.png" className='vote' onClick={upvote}/>
         </p>
                 {/* <button onClick={()=> initiateData()}>초기화</button>
           <Card.Footer className="text-muted">
             <button type="button" onClick={upvote}>좋아요</button>
             <button type="button" onClick={reset}>다른거</button>
           </Card.Footer> */}
-        </div>
     </>
   );
 }
@@ -54,23 +53,41 @@ function MenuReCommend() {
   const [finalList, setFinalList] = useState([]);                       // 최종 필터링 결과를 저장하는 목록
   const [finalMenu, setFinalMenu] = useState(null);                     // 최종 추천 메뉴 무작위 선정
   const [showFinalCard, setShowFinalCard] = useState(false);            // 최종 추천 메뉴 창 보임 상태
-
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(null);
+  const [selectedSubCategoryIndex, setSelectedSubCategoryIndex] = useState(null);
   const baseCategory = [ "한식", "중식", "일식", "아시안식", "상관없음"]; // 1차 카테고리
 
   // 1차 카테고리 세팅
   useEffect(() => { 
-    if(selectedCategory) {                     // 선택된 1차 카테고리가 있으면
-      get(dbRef, 'menus').then((snapshot) => { // 전체 데이터베이스 참조, 스냅샷 생성
-        if(snapshot.exists()) {                // 일시적 변수 데이터에 스냅샷 value를 복사한 뒤
-          const data = snapshot.val();         // 선택한 카테고리에 포함된 메뉴들만 필터링
-          const filteredMenus = selectedCategory === "상관없음" ? data : data.filter(menus => menus.nation === selectedCategory);
-          setMenus(filteredMenus); // menus 갱신
+    const fetchMenus = async () => {
+      try {
+        if(selectedCategory) {                     // 선택된 1차 카테고리가 있으면
+          const snapshot = await get(dbRef, 'menus'); // 전체 데이터베이스 참조, 스냅샷 생성
+          if(snapshot.exists()) {                // 일시적 변수 데이터에 스냅샷 value를 복사한 뒤
+            const data = snapshot.val();         // 선택한 카테고리에 포함된 메뉴들만 필터링
+            const filteredMenus = selectedCategory === "상관없음" ? data : data.filter(menus => menus.nation === selectedCategory);
+            setMenus(filteredMenus); // menus 갱신
+          }
         }
-      }).catch(error => {
-        console.error("Error fetching menus:", error);
-      });
-    }
-  }, [dbRef, selectedCategory]); // 카테고리 선택 변경 시마다 작동
+      } catch (error) {
+        console.error('Error fetching menus:', error);
+      }
+    };
+    fetchMenus();
+  }, [dbRef, selectedCategory]);
+
+  //   if(selectedCategory) {                     // 선택된 1차 카테고리가 있으면
+  //     get(dbRef, 'menus').then((snapshot) => { // 전체 데이터베이스 참조, 스냅샷 생성
+  //       if(snapshot.exists()) {                // 일시적 변수 데이터에 스냅샷 value를 복사한 뒤
+  //         const data = snapshot.val();         // 선택한 카테고리에 포함된 메뉴들만 필터링
+  //         const filteredMenus = selectedCategory === "상관없음" ? data : data.filter(menus => menus.nation === selectedCategory);
+  //         setMenus(filteredMenus); // menus 갱신
+  //       }
+  //     }).catch(error => {
+  //       console.error("Error fetching menus:", error);
+  //     });
+  //   }
+  // }, [dbRef, selectedCategory]); // 카테고리 선택 변경 시마다 작동
 
 
   // 2차 카테고리 세팅
@@ -99,32 +116,52 @@ function MenuReCommend() {
     }
   }
 
-  // 1차 카테고리 온클릭 메소드
-  const selectCategory = (category) => {
-    setSelectedCategory(category); // baseCategory 선택
-    setSubCategories(category);    // subcategories 설정
-  }
+// 1차 카테고리 온클릭 메소드
+const selectCategory = (category, index) => {
+  setSelectedCategory(category); // baseCategory 선택
+  setSelectedCategoryIndex(index); // 선택한 카테고리의 인덱스 저장
+  setSubCategories(category);    // subcategories 설정
+}
 
   
   // 2차 카테고리 선택에 따른 메뉴 필터링
-  useEffect(() => {
-    if(selectedSubCategory !== null) {                          // subcategory가 선택된 상태면
-      let filteredMenus = [];
-      if (selectedCategory === "상관없음")
-        filteredMenus = menus.filter(menu => menu.type === selectedSubCategory);    // 선택한 type에 맞는 메뉴들만 필터링
-      else {
-        filteredMenus = menus.filter(menu => menu.type === selectedSubCategory && menu.nation === selectedCategory)
-      }                        // menus 갱신
-      setFinalList(filteredMenus);       
+useEffect(() => {
+  const showFinalMenu = async finalList => {
+    try {
+      if (selectedSubCategory !== null) {
+        let filteredMenus = [];
+        if (selectedCategory === '상관없음') {
+          filteredMenus = menus.filter(menu => menu.type === selectedSubCategory);
+        } else {
+          filteredMenus = menus.filter(
+            menu => menu.type === selectedSubCategory && menu.nation === selectedCategory
+          );
+        }
+        setFinalList(filteredMenus);
 
+        if (filteredMenus.length > 0) {
+          const randomIndex = Math.floor(Math.random() * filteredMenus.length);
+          const randomMenu = filteredMenus[randomIndex];
+          setFinalMenu(randomMenu);
+          setShowFinalCard(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error showing final menu:', error);
     }
-  }, [selectedSubCategory, menus]);
+  };
 
-  // 2차 카테고리 온클릭 메소드
-  const selectSubCategory = (index) => {
-    setSelectedSubCategory(subcategories[index]);  // 서브 카테고리 선택 저장
-    showFinalMenu(finalList);                   // 최종 추천 메뉴 창 보이기
-  }
+  (async () => {
+    await showFinalMenu();
+  })();
+}, [selectedSubCategory, selectedCategory]);
+
+// 2차 카테고리 온클릭 메소드
+const selectSubCategory = (subcategory, index) => {
+  setSelectedSubCategory(subcategory);
+  setSelectedSubCategoryIndex(index);
+  showFinalMenu(finalList);
+}
 
   // 최종 추천 메뉴를 랜덤으로 선정
   const showFinalMenu = (finalList) => {
@@ -149,31 +186,59 @@ function MenuReCommend() {
   // finalMenu 창 닫기 
   const closeCard = () => setShowFinalCard(false);
 
+  const handleResetClick = () => {
+    // 페이지를 새로고침
+    window.location.reload();
+  };
+  
   // 리턴 렌더링 부분
   return (
-    <div className='recommend'>
+    <div className="recommend">
       <div className='section_title'>메뉴 추천</div>
-        <ul>
-            {baseCategory.map((category, index) => (
-              <li key={index} onClick={()=> selectCategory(category)}>
-                {category}</li>
+      <div className="dotted-line-container">
+        <div className="dotted-line" />
+        {/* 투표는 건드리지 않고 난수만 다시 뽑아서 음식을 선택해주는 리셋 버튼 */}
+        <img className = 'reset' src="https://i.ibb.co/yRggpzD/reset.png" onClick={handleResetClick} alt="reset" />
+      </div>
+      <div className="lists-container">
+        <div className="category-list">
+          <ul>
+          {baseCategory.map((category, index) => (
+            <li
+              key={index}
+              onClick={() => selectCategory(category, index)}
+              className={selectedCategoryIndex === index ? 'selected' : ''}
+            >
+              {category}
+            </li>
             ))}
           </ul>
-          <p></p>
+        </div>
+        <div className="subcategory-list">
           <ul>
           {subcategories.map((subcategory, index) => (
-          <li key={index} onClick={() => selectSubCategory(index)}>
-            {subcategory}</li> ))}
+            <li
+              key={index}
+              onClick={() => selectSubCategory(subcategory, index)}
+              className={selectedSubCategoryIndex === index ? 'selected' : ''}
+            >
+              {subcategory}
+            </li>
+            ))}
           </ul>
-          {finalMenu && showFinalCard && (
-            <Show currentMenu={finalMenu} 
-            upvote={() => upvote(finalMenu)} 
-            reset={()=> {pickCurrentMenu({data:menus, force: true})}}
-            onClose={closeCard} 
-            showCard={showFinalCard}/>
-          )}
+        </div>
+      </div>
+      {finalMenu && showFinalCard && (
+        <Show
+          currentMenu={finalMenu}
+          upvote={() => upvote(finalMenu)}
+          reset={() => { pickCurrentMenu({ data: menus, force: true }) }}
+          onClose={closeCard}
+          showCard={showFinalCard}
+        />
+      )}
     </div>
-  );  
-} 
+  );
+}
 
 export default MenuReCommend;

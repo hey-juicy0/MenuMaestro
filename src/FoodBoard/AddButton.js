@@ -94,7 +94,7 @@ const AddButton = function ({ onNewColor = f => f }) {
 
   return (
     <div id="Foodboard">
-      <button className="fixed-button" onClick={openModal}>
+      <button className="ranking" onClick={openModal}>
         글쓰기
       </button>
       <Modal isOpen={isModalOpen} onRequestClose={closeModal} id="boardModal">

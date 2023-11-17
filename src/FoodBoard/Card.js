@@ -19,21 +19,22 @@ const closeModal = () => {
 return (
         <div> 
             <center>
-            <Card className="card-center" onClick={openModal} style={{ width: '400px', height: '400px' }}>
+            <Card className="card-center" onClick={openModal}>
         <Card.Body>
-          <Card.Title><img className="card-menu-image" src={src} alt="..." style={{ width: '300px', height: '300px', objectFit: 'cover'}} /></Card.Title>
-          <Card.Text>{title}</Card.Text>
+          <Card.Title><img className="card-menu-image" src={src} alt="..."/></Card.Title>
+          <Card.Text className="card_menu_text">{title}</Card.Text>
         </Card.Body>
       </Card>
 
-      <Modal className = "board_modal" isOpen={modalIsOpen} onRequestClose={closeModal}>
+      <Modal className= "board_modal" isOpen={modalIsOpen} onRequestClose={closeModal}>
   <center>
-    <h2>{title}</h2>
+    <div className="board_modalText">{title}</div>
+    <hr/>
     <p>{detail.split('\n').map((item, key) => {
       return <span key={key}>{item}<br/></span>
     })}</p>
     <p>{date}</p>
-    <img src={src} style={{ width: '30%', height: '30%', objectFit: 'cover' }} />
+    <img src={src} />
     <br />
     <button onClick={closeModal}>닫기</button>
   </center>

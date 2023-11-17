@@ -15,7 +15,7 @@ import FoodBoard from './pages/FoodBoard';
 import MenuReCommend from './pages/MenuReCommend';
 import WorldCup from './pages/WorldCup';
 import MenuAdd from './pages/MenuAdd';
-import MemberInfo from './pages/MemberInfo'; 
+import MemberInfo from './pages/MemberInfo';
 
 import { useState, useDatabase, useEffect } from 'react';
 import { DatabaseProvider } from './contexts';
@@ -111,7 +111,7 @@ function App() {
       const currentTime = new Date().getTime();
       const timeDifference = currentTime - lastClosedTimeValue;
   
-      const timeInterval = 10000; // 10 * 1000;   // 시간 ms
+      const timeInterval = 1; // 10 * 1000;   // 시간 ms
   
       if (timeDifference < timeInterval && !doNotShowToday) {
         setShowModal(false);
@@ -171,19 +171,19 @@ function App() {
           onClick={()=> {navigate('/MemberInfo')}}
           src="https://i.ibb.co/qWjYTwK/info-button-1.png"
         />
-
-        <Modal className = "randomModal" show={showModal} onHide={CloseModal} width="1000px">
-          <Modal.Header closeButton>
-            <Modal.Title>오늘의 추천 메뉴!</Modal.Title>
+        <div>
+        <Modal id = "randomModal" style={{minwidth: '100vw'}} show={showModal} onHide={CloseModal}>
+          <Modal.Header style={{fontSize:'4vh', marginRight:'2vw', height:'10vh'}}closeButton>
+          <Modal.Title style ={{fontSize:'5vh',left:'50%',transform:'translateX(-50%)',position:'fixed', whiteSpace:'nowrap'}}>오늘의 추천 메뉴!</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            <table>
+          <Modal.Body style={{top:'10vh',left:'50%',transform:'translateX(-50%)',position:'fixed', whiteSpace:'nowrap'}}>
+            <table className='showToday'>
               <tr>
               {[0, 1, 2].map((index) => (
           <td>
             {menusCheck() !== -1 && (
-              <img src={menus[ArraymenuIndex[index]].url} width="150px" height="150px" alt={`Menu ${index + 1}`} />
-            )}
+              <img className='today_image' src={menus[ArraymenuIndex[index]].url} alt={`Menu ${index + 1}`} />
+            )} 
           </td>
         ))}
               </tr>
@@ -192,20 +192,20 @@ function App() {
           <td>
             <center>
             {menusCheck() !== -1 && (
-              <p style={{ fontSize: '15px', fontWeight: 'bold' }}>{menus[ArraymenuIndex[index]].name}</p>
+              <p style={{fontSize:'4vh', whiteSpace:'nowrap'}}>{menus[ArraymenuIndex[index]].name}</p>
             )}
             </center>
           </td>
         ))}
               </tr>
             </table>
-            { <div>
-              <input type="checkbox" checked={handleCheckboxChange} onChange={handleClose} />
-              <label>오늘 하루 보지 않음</label>
-            </div> }
           </Modal.Body>
+          <Modal.Footer style={{fontSize:'4vh', position:'fixed',bottom:0,left:0, border:'none'}}>
+              <input type="checkbox" checked={handleCheckboxChange} onChange={handleClose} style={{ verticalAlign:'middle',width: '3vw', height: '3vw',marginRight:'1vw'}}/>
+              <label>오늘 하루 보지 않음</label>
+          </Modal.Footer>
         </Modal>
-
+        </div>
         <Routes>
           <Route path='/' element={<Main />} />
           <Route path='/MenuRecommend' element={<MenuReCommend userPick={userPick} setUserPick={setUserPick}/>} />

@@ -1,29 +1,67 @@
-.recommend ul {
-    list-style: none;
-    margin: 0 auto;
-    padding-left: 0;
-    position: relative;
-    top: 20vh;
-    border: 3px solid #333;
-    border-radius: 10px;
-    max-width: 400px;
-    width: 100%;
-    height: 320px;
-    font-size: 24pt;
-}
-
-.recommend ul li {
-    list-style: none;
-    border-bottom: 2px dashed #333;
+/* category.css (추가 또는 수정) */
+.lists-container {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    margin-top: 20vh;
+    display: flex;
     text-align: center;
-    
-    max-height: 350px;
-    padding: 2px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    justify-content: center;
+    position: fixed;
+    gap: 0 10vw;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .category-list,
+  .subcategory-list {
+    flex: 1;
+    list-style: none;
+  }
+
+  .category-list ul,
+  .subcategory-list ul{
+    width: 30vw;
+    border: 0.3vh solid #333;
+    border-radius: 10px;
+    list-style: none;
+    padding-left: 0;
+
+  }
+  
+
+  .category-list li,
+  .subcategory-list li {
+    width: 30vw;
+    font-size: 5vh;
+    cursor: pointer;
+    list-style: none;
+    margin: 0;
+  padding: 0;
+  }
+  .category-list li:not(:last-child),
+  .subcategory-list li:not(:last-child) {
+  border-bottom: 0.3vh dashed #333;
+}
+.category-list li.selected,
+.subcategory-list li.selected {
+    background-color: #2ccec9;
+    color: #fff;
+    border-radius: 1vh;
+    width: 29.8vw;
 }
 
-.recommend a {
-    text-decoration: none;
-    color: #000;
+.recommend_card{
+    align-items: center;
+    text-align: center;
+    width:25vw;
+    top:20vh;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}
+.recommend_image{
+    width: 18vw;
+    height: 18vw;
+    object-fit: cover;
+    margin-top: 3vh;
 }

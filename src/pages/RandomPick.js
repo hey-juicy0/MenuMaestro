@@ -401,6 +401,7 @@ function RandomRick({ userPick, setUserPick }) {
   // console.log(lastMenuNameRef) > 초기값은 ' ' 이 상태임 시작버튼시 > current채워짐 / last: { current : ' '}
   const lastMenuNameRef = useRef('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
+  const [voteCount, setVoteCount] = useState(0);
 
   // 유저가 따봉 버튼을 눌러서 db에 있는 vote값을 변경할 예정
   const upvote = () => {
@@ -430,6 +431,7 @@ const pickCurrentMenu = ({data, force}) => {
         if (getToday() !== targetMenu.lastVote){
           //CurrentMenu를 접근하기 위해 상태함수사용, 다른 날이기 때문에 vote수를 초기화 하고 +1
           setCurrentMenu(menu => ({...menu, lastVote: getToday(), vote: 1}));
+          setVoteCount(0);
           console.log("vote+1");
           
         } else {
@@ -475,6 +477,7 @@ const pickCurrentMenu = ({data, force}) => {
     setMenus(data);
     // 변경된 data를 기반으로 위 함수를 실행시킴 
     pickCurrentMenu({data, force: false});
+
   });
 
   const closeModal = () => {

@@ -32,7 +32,7 @@ const CardList = ({ data = []}) => {
   return (
     <div className="cardlist">
       <center>
-        <h2>{data[0].date}</h2>
+        <div className="date_text">{data[0].date}</div>
       </center>
       <Slider {...settings}>
         

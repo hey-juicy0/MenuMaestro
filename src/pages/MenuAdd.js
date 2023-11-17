@@ -79,27 +79,26 @@ function MenuAdd() {
 
   return (
     <>
-      <div className="show">
-        <h1 style={{ marginLeft: '1.5em' }}>  메뉴 추가</h1>
+      <div>
+        <div className ="section_title">메뉴 추가</div>
         <div className="dotted-line-container">
           <div className="dotted-line" />
-          <p></p>
         </div>
         <p></p>
         <div className="add-menu-form" >
           <Form onSubmit={handleNewMenu}>
-            <div className="box-border" style={{ border: '2px solid black', padding: '15px', borderRadius: '10px' }} >
+            <div className="box-border" style={{ border: '0.3vh solid #595959', padding: '2vh 2vw',  borderRadius: '1vw' }} >
             <Form.Group className="mb-3" controlId="menuName">
-              <Form.Label style={{ fontSize: '1.3em', fontWeight: 'bold' }}>메뉴 이름</Form.Label>
-              <Form.Control type="text" placeholder='' required />
-              <Form.Text style={{ fontSize: '0.7em', color: 'rgb(67, 200, 208)', fontWeight: 'bold'}}>
+              <Form.Label style={{ fontSize: '3vh', fontWeight: 'bold' }}>메뉴 이름</Form.Label>
+              <Form.Control type="text" placeholder='' required style={{ fontSize: '2.5vh'}} />
+              <Form.Text style={{ fontSize: '2vh', color: 'rgb(67, 200, 208)', fontWeight: 'bold'}}>
                 *필수 입력 값입니다.
               </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-1" controlId="menuCategory1">
-              <Form.Label style={{ fontSize: '1.2em', fontWeight: 'bold' }}>카테고리 1</Form.Label>
-              <Form.Select name="menuCategory1" required>
+              <Form.Label style={{ fontSize: '3vh', fontWeight: 'bold' }}>카테고리 1</Form.Label>
+              <Form.Select name="menuCategory1" required style={{ fontSize: '2.5vh'}}>
                 <option>선택</option>
                 <option>한식</option>
                 <option>양식</option>
@@ -110,9 +109,9 @@ function MenuAdd() {
               </Form.Select>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="menuCategory2">
-              <Form.Label style={{ fontSize: '1.2em', fontWeight: 'bold' }}>카테고리 2</Form.Label>
-              <Form.Select name="menuCategory2" required>
+            <Form.Group className="mb-3" controlId="menuCategory2"  style = {{marginTop: '2vh'}}>
+              <Form.Label style={{ fontSize: '3vh', fontWeight: 'bold' }}>카테고리 2</Form.Label>
+              <Form.Select name="menuCategory2" required style={{ fontSize: '2.5vh'}}>
                 <option>선택</option>
                 <option>밥</option>
                 <option>면</option>
@@ -124,13 +123,11 @@ function MenuAdd() {
            
 
             <Form.Group className="position-relative mb-3">
-              <Form.Label style={{ fontSize: '1.2em', fontWeight: 'bold' }}>사진</Form.Label>
-              <Form.Control type="file" name="file" />
+              <Form.Label style={{ fontSize: '3vh', fontWeight: 'bold' }}>사진</Form.Label>
+              <Form.Control type="file" name="file" style={{ fontSize: '2.5vh'}} />
             </Form.Group>
             </div>
-
-            <p></p>
-            <Button variant="primary" type="submit" style={{ backgroundColor: 'rgb(67, 200, 208)', border: '2px solid rgb(67, 200, 208)' }}>
+            <Button variant="primary" type="submit" className='add_button'>
               추 가 하 기
             </Button>
           </Form>

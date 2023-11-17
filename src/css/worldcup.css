@@ -82,6 +82,21 @@
     right:0.5vw;
     object-fit: cover;
 }
+.close {
+  cursor: pointer;
+  width: 3vw;
+  object-fit: cover;
+  right: 0.5vw;
+  top: 1vh;
+  position: absolute;
+}
+.recommend_text{
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 2.5vw;
+  font-weight: 500;
+  color: #595959;
+  white-space: nowrap;
+}
 .go_back{
     cursor: pointer;
     margin-left:2vw;
@@ -101,7 +116,7 @@
 /*화면*/
 .worldcup_frame{
     position: relative;
-    top:50vh;
+    top: 49vh;
     transform: translateY(-50%);
     display: flex;
     flex-wrap: wrap;
@@ -127,7 +142,6 @@
 .card_card{
     overflow: hidden;
     flex-basis: auto;
-    position: relative;
     align-items: center;
     text-align: center;
     width:20vw;
@@ -141,6 +155,7 @@
 .card_card .card_image{
    width: 15vw;
    height: 15vw;
+   object-fit: cover;
    margin-top: 3vh;
 
 }
@@ -192,7 +207,7 @@
 .worldcup_finalround{
     position:fixed;
     color: red;
-    top:25vh;
+    top:23vh;
     left: 50%;
     transform: translateX(-50%);
     font-family: 'PyeongChangPeace-Bold';
@@ -205,7 +220,7 @@
     transform: translateX(-50%);
     width: 34vw;
     position: absolute;
-    top: 24vh;
+    top: 22vh;
     display: flex;
     justify-content: flex-start;
   }
@@ -227,7 +242,7 @@
         z-index: 10000;
         padding:0vh 1vw;
         bottom:5vh;
-        position: absolute;
+        position: fixed;
         right:2vw;
         font-family: 'Noto Sans KR', sans-serif;
         font-weight: 500;
@@ -243,14 +258,14 @@
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 500;
     align-items: center;
-    font-size: 3vw;
+    font-size: 5vh;
     left: 50%;
     transform: translateX(-50%);
     line-height: normal;
     white-space: nowrap;
     position: fixed;
     overflow: auto;
-    bottom: 2vh;
+    bottom: 4vh;
   }
   .vote{
     width: 3vw;
