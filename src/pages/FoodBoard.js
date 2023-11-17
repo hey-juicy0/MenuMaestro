@@ -41,18 +41,15 @@ function FoodBoard() {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: '50px' }}>
     <center>
-    <div className="section_title">단원 게시판</div>
-    <div className="dotted-line" />
+    <h1>단원 게시판</h1>
+    <div class="dotted-line" />
     </center>
       <AddButton onNewColor={handleNewColor} />
-      <div style={{marginTop:'20vh'}}>
       <DateList
         data={menus.sort((a, b) => new Date(b.date) - new Date(a.date))}
       />
-      </div>
-      
     </div>
   );
 }
