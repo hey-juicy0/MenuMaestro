@@ -2,20 +2,17 @@ import React, { useState, useEffect } from 'react';
 import './FoodBoard.css';
 import Modal from 'react-modal';
 
-const AddButton = function ({ onNewColor = f => f }) {
+const AddButton = function({ onNewColor = f => f }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [titleValue, setTitleValue] = useState("");
   const [detailValue, setDetailValue] = useState("");
-  const [dateValue, setDateValue] = useState("");
+  let [dateValue, setDateValue] = useState("");
   const [urlValue, setUrlValue] = useState("");
-  const [imagePreview, setImagePreview] = useState("");
 
   useEffect(() => {
-    if (isModalOpen) {
-      const currentDate = new Date().toISOString().slice(0, 10);
-      setDateValue(currentDate);
-    }
-  }, [isModalOpen]);
+    // 컴포넌트가 마운트될 때 모달이 열릴 때 감춰질 요소 설정
+    Modal.setAppElement('#modal-root');
+  }, []);
 
   const openModal = () => {
     setModalOpen(true);
@@ -26,13 +23,27 @@ const AddButton = function ({ onNewColor = f => f }) {
   };
 
   const handleSubmit = () => {
-    onNewColor(titleValue, detailValue, dateValue, urlValue);
-    setTitleValue("");
-    setDetailValue("");
-    setDateValue("");
-    setUrlValue("");
-    setImagePreview("");
-    closeModal();
+    if (!titleValue) {
+      alert("제목을 입력하세요!");
+      return;
+    }
+    else if(!urlValue){
+      alert("이미지 URL을 입력하세요!");
+      return;
+    }
+    // 제출 버튼이 클릭되었을 때 수행할 작업 추가
+    dateValue = document.getElementById("date").value;
+  console.log("Title:", titleValue);
+  console.log("Detail:", detailValue);
+  console.log("Date:", dateValue);
+  onNewColor(titleValue, detailValue, dateValue, urlValue);
+  setTitleValue("");
+  setDetailValue("");
+  setDateValue("");
+  closeModal(); // 모달 닫기
+
+  // 페이지 새로고침
+  window.location.reload();
   };
 
   const handleTitleChange = (e) => {
@@ -46,16 +57,28 @@ const AddButton = function ({ onNewColor = f => f }) {
   const handleDateChange = (e) => {
     setDateValue(e.target.value);
   };
-
   const handleUrlChange = (e) => {
-    const imageUrl = e.target.value;
-    setUrlValue(imageUrl);
+    setUrlValue(e.target.value);
+  };
+  const getCurrentDate = () =>
+  {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    
 
-    if (imageUrl.startsWith("http") || imageUrl.startsWith("https")) {
-      setImagePreview(imageUrl);
+    /*
+    if (hours >= 12) {
+      hours = (hours - 12).toString().padStart(2, '0');
+      return `${year}-${month}-${day} 오후 ${hours}:${minutes}:${seconds}`;
     } else {
-      setImagePreview("");
+      // 오전인 경우
+      return `${year}-${month}-${day} 오전 ${hours}:${minutes}:${seconds}`;
     }
+    */
+
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -108,12 +131,12 @@ const AddButton = function ({ onNewColor = f => f }) {
               </tr>
               <tr>
                 <th>이미지 미리보기</th>
-                <td>{imagePreview && (
+                <td>
                   <img
-                    src={imagePreview}
+                    src= {urlValue}
                     alt="이미지 미리보기"
                   />
-                )}</td>
+                  </td>
               </tr>
               <tr>
                 <th>날짜</th>
@@ -121,7 +144,7 @@ const AddButton = function ({ onNewColor = f => f }) {
                   <input
                     id="date"
                     type="text"
-                    value={dateValue}
+                    value={getCurrentDate()}
                     onChange={handleDateChange}
                     disabled
                   />

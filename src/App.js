@@ -14,6 +14,7 @@ import MenuReCommend from './pages/MenuReCommend';
 import WorldCup from './pages/WorldCup';
 import MenuAdd from './pages/MenuAdd';
 import MemberInfo from './pages/MemberInfo'; 
+import RankingComponent from './pages/WorldRank';
 
 import { useState } from 'react';
 import { DatabaseProvider } from './contexts';
@@ -38,7 +39,7 @@ function App() {
               <Nav.Link onClick={()=> {navigate('/MenuRecommend')}}>
               <img 
                 className='nav-menu-image' 
-                src="https://i.ibb.co/Tbvs0J9/like.png" alt="" />메뉴추천</Nav.Link>
+                src="https://i.ibb.co/Tbvs0J9/like.png" alt="" />메뉴 추천</Nav.Link>
               </div>
               <div className='nav-menu-image-container' title="랜덤 추천 화면으로 이동">
                 <Nav.Link onClick={()=> {navigate('/RandomPick')}}>
@@ -73,7 +74,7 @@ function App() {
             </Nav>
           </Container>
         </Navbar> 
-        <img className='memberinfo'title="운영 단원 소개"
+        <img className='memberinfo' title="운영 단원 소개"
           onClick={()=> {navigate('/MemberInfo')}}
           src="https://i.ibb.co/qWjYTwK/info-button-1.png"
         />
@@ -86,6 +87,7 @@ function App() {
           <Route path='/FoodBoard' element={<FoodBoard />} />
           <Route path='/MenuAdd' element={<MenuAdd />} />
           <Route path='/MemberInfo' element={<MemberInfo />} />
+          <Route path='/WorldRank' element={<RankingComponent type="rankCount" />}/>
 
         </Routes>
     </div>
@@ -95,7 +97,7 @@ function App() {
 
 function Main() {
   return(
-    <div className="main-bg" style={{marginTop: "50px"}}>
+    <div className="main-bg">
     <div className="container">
       <div className="logo_frame">
         <img className="logo" src="https://i.ibb.co/BLr11Tv/2.png" alt="Logo" />

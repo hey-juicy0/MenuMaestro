@@ -1,10 +1,10 @@
 // Card 빼고 다 임포트 하시면 됩니다.
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import '../index.css'
+import Modal from 'react-modal';
+import { Link } from 'react-router-dom';
 
-// 카드 모양 넣을라고 부트스트랩에서 카드컴포넌트 하나 가져왔습니다.
-import Card from 'react-bootstrap/Card';
-
+Modal.setAppElement('#root');
 // 데이더 읽기(get) 쓰기(set, ref), 업데이트(update)
 // 자세한 건 파이어베이스 공식문서를 참고하시면 될거 같습니다. 
 //https://firebase.google.com/docs/database/web/read-and-write?hl=ko 참고해주세요
@@ -400,9 +400,7 @@ function RandomRick({ userPick, setUserPick }) {
   const [currentMenu, setCurrentMenu] = useState({});
   // console.log(lastMenuNameRef) > 초기값은 ' ' 이 상태임 시작버튼시 > current채워짐 / last: { current : ' '}
   const lastMenuNameRef = useRef('');
-
-  //랜덤메뉴 보여주는 부분 보여주는 곳
-  const [show, setShow] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(true);
 
   // 유저가 따봉 버튼을 눌러서 db에 있는 vote값을 변경할 예정
   const upvote = () => {
@@ -432,9 +430,12 @@ const pickCurrentMenu = ({data, force}) => {
         if (getToday() !== targetMenu.lastVote){
           //CurrentMenu를 접근하기 위해 상태함수사용, 다른 날이기 때문에 vote수를 초기화 하고 +1
           setCurrentMenu(menu => ({...menu, lastVote: getToday(), vote: 1}));
+          console.log("vote+1");
+          
         } else {
           // 쏨땀이라는 객체값에서 투표수를 하나 증가시킴 (같은 날에 투표 한 상황)
           setCurrentMenu(menu => ({...menu, vote: targetMenu.vote+1}));
+          console.log("vote+1");
         }
       }
       return;
@@ -476,69 +477,44 @@ const pickCurrentMenu = ({data, force}) => {
     pickCurrentMenu({data, force: false});
   });
 
+  const closeModal = () => {
+    setModalIsOpen(false);
+  }
+
+  useEffect(() => {
+    setModalIsOpen(true);
+  }, []);
 
   // start 버튼 누르면 show컴포넌트가 보여짐
   return (
-    <div className="show">
+    <>
+    <Modal
+    isOpen = {modalIsOpen}
+    contentLabel='모달'
+    className= 'Modal'>
+        <div className = "modal_title">랜덤</div>
+        <button className = "rectangle" onClick={closeModal}>시작</button>
+        <Link to = "/">
+        <img className='reject' src = "https://i.ibb.co/YZbWQM5/reject.png"></img>
+        </Link>
+    </Modal>
       <h1 className='section_title'>랜덤</h1>
       <div className="dotted-line-container">
         <div className="dotted-line" />
         {/* 투표는 건드리지 않고 난수만 다시 뽑아서 음식을 선택해주는 리셋 버튼 */}
-        <img className = 'reset' src="https://i.ibb.co/yRggpzD/reset.png" alt="" onClick={()=> {pickCurrentMenu({data:menus, force: true})}} />
+        <img className = 'reset' src="https://i.ibb.co/yRggpzD/reset.png" onClick={() => pickCurrentMenu({ data: menus, force: true })} alt="reset" />
       </div>
-      {!show && (
-        // 이 버튼으로 인해 시작버튼이 눌리면 상태값으로 인해 시작버튼은 사라짐
-        <button
-        style={{
-          backgroundColor: '#2ccec9',
-          width: '190px',
-          height: '70px',
-          borderRadius: '10px',
-          border: 'none',
-        }}
-        onClick={() => {
-          setShow(true);
-        }}
-        >
-        <h1
-        style = {{
-          color: '#ffffff',
-          fontSize: '64px',
-          fontFamily: 'ELAND_Nice_M',
-          position:'relative'
-        }}>시작</h1>
-        </button>
-      )}
-      {show && ( // 시작버튼으로 인해 상태가 true로 바뀌면서 Show컴포넌트가 들어나게 됨
-                //들어나면서 선택된 메뉴의 객체 {lastVoe:"2023", name:"쏨땀"..}과 upvote 투표수와 리셋은 버려도됨 다시 만듬
-          <Show currentMenu={currentMenu} upvote={upvote} reset={()=> {pickCurrentMenu({data:menus, force: true})}} />
-        )}
-    </div>
-  );
-} // ~~ RandomPick 끝
-
-
-// 실제 음식이 보여지는 컴포넌트임 currentMenu = (객체,함수, 이거 지움) 
-function Show({currentMenu, upvote, reset }) {
-  return (
-    <>
-      <Card className="text-center">
-        <Card.Body>
-          <Card.Title><img className="random-current-menu-image" src={currentMenu.url} alt="food"/></Card.Title>
-          <Card.Text>{currentMenu.name}</Card.Text>
-        </Card.Body>
-      </Card>
+      <div className='card_frame'>
+        <div className="card_card">
+          <img className="card_image" src={currentMenu.url} alt={currentMenu.name} />
+          <p className="card_text">{currentMenu.name}</p>
+        </div>
+      </div>
       <p className="random-menu-description">
         오늘({getTodayReadable()}) {currentMenu.vote}회의 추천을 받았습니다 &nbsp;
-        <img src = "https://i.ibb.co/4VXmN4x/like-1.png" width={"40px"} onClick={upvote}/>
+        <img className= 'vote' src = "https://i.ibb.co/4VXmN4x/like-1.png" width={"40px"} onClick={upvote}/>
       </p>
-              {/* <button onClick={()=> initiateData()}>초기화</button>
-        <Card.Footer className="text-muted">
-          <button type="button" onClick={upvote}>좋아요</button>
-          <button type="button" onClick={reset}>다른거</button>
-        </Card.Footer> */}
     </>
   );
-}
-
+} // ~~ RandomPick 끝
 export default RandomRick;

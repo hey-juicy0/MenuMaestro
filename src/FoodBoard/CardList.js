@@ -27,10 +27,10 @@ const settings = {
   //nextArrow: <CustomArrow text="다음" />, 다음 버튼
 };
 
-const CardList = ({ data = [], date="2023-11-07" }) => {
+const CardList = ({ data = []}) => {
   
   return (
-    <div class="cardlist">
+    <div className="cardlist">
       <center>
         <h2>{data[0].date}</h2>
       </center>

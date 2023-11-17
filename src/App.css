@@ -1,56 +1,94 @@
 /* 네비바 css */
 .nav-layout {
   background-color: #2ccec9 !important;
-  height: 80px;
-  display: flex; /* 요소들을 가로로 나열합니다. */
-  justify-content: space-between; /* 요소들을 양 끝으로 밀어 넣습니다. */ /* 요소들을 세로 중앙에 정렬합니다. */
-  align-items: left;
-  
+  height: 10vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Changed to center for vertical alignment */
 }
 
 .main-bg {
-  height : 800px;
-  background-size : cover;
-  background-position : center;
-  margin-top: 50px;
+  height: fit-content;
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  top: 10vh;
+  align-items: center;
+  text-align: center;
 }
 
-.modal{
-  margin-top : 20px;
-  padding : 20px;
-  background : #eee;
-  text-align : left;
+.modal {
+  margin-top: 2%;
+  padding: 2%;
+  background: #eee;
+  text-align: left;
 }
 
 .menumaestro {
   float: left;
-  margin-top: 20px;
-  height: 123px;
   position: absolute;
-  left: 2%;
+  left: 3vw;
+  top: -1.5vh;
   font-family: 'Yeongdo-Rg';
   font-weight: 400;
-  font-size: 70px;
+  font-size: 9vh;
   white-space: nowrap;
   color: white;
   text-align: center;
   letter-spacing: 0;
   cursor: pointer;
+}
 
+.nav-menu-image-container > a {
+  width: 7vw;
+  margin-left: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Godo';
+  font-style: normal;
+  font-weight: 400;
+  white-space:nowrap;
+  color: white;
+  font-size: 1vw; /* Responsive font size using rem */
+}
+
+.nav-menu-image {
+  width: 3vw;
+  margin-top: 0.5vh;
+}
+
+.me-auto {
+  position: absolute;
+  right: 0; /* Set the top value as needed */
 }
 
 /* 메인 홈페이지 CSS */
+@font-face {
+  font-family: 'Godo';
+  font-style: normal;
+  font-weight: 400;
+  src: url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff2') format('woff2'), url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff') format('woff');
+}
 
+@font-face {
+  font-family: 'Godo';
+  font-style: normal;
+  font-weight: 700;
+  src: url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoB.woff2') format('woff2'), url('//cdn.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoB.woff') format('woff');
+}
+
+.godo * {
+ font-family: 'Godo', sans-serif;
+}
 @font-face {
   font-family: 'Yeongdo-Rg';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/Yeongdo-Rg.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'Noto Sans KR', sans-serif;
-  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;900&display=swap');
 }
 
 @font-face {
@@ -83,11 +121,11 @@
 }
 
 .logo_frame {
-  top: 90px;
   position: absolute;
-  width: 272px;
-  height: 183px;
+  width: 12vw;
+  height: 12vw;
   left: 50%;
+  margin-top: 1vh;
   transform: translateX(-50%);
   text-align: center;
   background-image: url("https://i.ibb.co/ZKnsPMq/1.png");
@@ -96,46 +134,35 @@
 }
 
 .logo {
-  margin-top: 23px;
-  width: 63px;
-  height: 63px;
+  margin-top: 1.5vw;
+  width: 4vw;
+  height: 4vw;
   overflow: auto;
   text-align: center;
   object-fit: cover;
 }
 
 .text_info {
-  position: absolute;
-  width: 621px;
-  height: 23px;
-  top: 300px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  top:14vw;
   font-family: 'Orbit-Regular';
   color: #000000;
-  font-size: 16px;
+  font-size: 1.2vw;
   text-align: center;
-  letter-spacing: 0;
   line-height: normal;
+  white-space:nowrap;
 }
 
 .info {
-  position: absolute;
-  width: 700px;
-  height: 306px;
-  top: 355px;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 45vw;
+  margin-top: 33vh;
   object-fit: cover;
 }
-.nav-menu-image-container:first-child {
-  margin-left: 100%;
-}
+
 .memberinfo{
   position: fixed;
-  left: 2%;
+  left: 2vw;
   bottom: 3%;
   cursor: pointer;
-  width: 60px;
-  height: 60px;
+  width: 3.5vw;
 }

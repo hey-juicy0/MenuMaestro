@@ -27,14 +27,7 @@
     line-height: normal;
     white-space: nowrap;
   }
-  
-  .members {
-    flex-direction: column;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1%;
-  }
+
   
   .row1,
   .row2 {

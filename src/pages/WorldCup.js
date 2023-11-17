@@ -78,10 +78,15 @@ const WorldCup = () => {
             
             if(getToday() !== lastVote)
             {
-              vote === 0;
+              setWinningTeamData({ name, lastVote, vote:0, url }); // 상태 업데이트
+              console.log(`${name}의 lastVote: ${lastVote}, vote: 0, url: ${url}`);
+
+            }else{
+              setWinningTeamData({ name, lastVote, vote, url }); // 상태 업데이트
+              console.log(`${name}의 lastVote: ${lastVote}, vote: ${vote}, url: ${url}`);
+
             }
-            console.log(`${name}의 lastVote: ${lastVote}, vote: ${vote}, url: ${url}`);
-            setWinningTeamData({ name, lastVote, vote, url }); // 상태 업데이트
+            
           } else {
             console.error(`${team.name} 팀을 찾을 수 없습니다.`);
           }
@@ -157,6 +162,7 @@ const WorldCup = () => {
     // 페이지를 새로고침
     window.location.reload();
   };
+
   const upVote = async () => {
     try {
       if (winningTeamData && !isVoteClicked) {
@@ -183,7 +189,7 @@ const WorldCup = () => {
                   vote: updatedVote,
                   lastVote: getToday(),
                 }));
-                console.log("Firebase에 정상적으로 투표가 업데이트 되었습니다.");
+                console.log(`${menuData.name}의 vote: ${updatedVote}, lastVote:${getToday()} `);
               }).catch((error) => {
                 console.error("Firebase 투표 업데이트 중 오류 발생:", error);
               });
@@ -213,14 +219,12 @@ const WorldCup = () => {
         contentLabel='모달'
         className='Modal'
       >
-        <div className='overlap-group' onClick={() => {closeModal();}}>
-          <div className='rectangle'></div>
-          <div className='text-wrapper'>시작</div>
-        </div>
+         <div className="modal_title">월드컵</div>
+         <button className = "rectangle" onClick={() => {closeModal();}}>시작</button>
         <Link to="/">
           <img className='reject' src="https://i.ibb.co/YZbWQM5/reject.png" alt="reject"></img>
         </Link>
-        <div className="modal_title">월드컵</div>
+       
       </Modal>
       <h1 className="section_title">월드컵</h1>
       <div className="dotted-line-container">
