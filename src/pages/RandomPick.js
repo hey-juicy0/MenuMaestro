@@ -16,6 +16,7 @@ function RandomRick({ userPick, setUserPick }) {
   const [currentMenu, setCurrentMenu] = useState({});
   const lastMenuNameRef = useRef('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
+  const [voteCount, setVoteCount] = useState(0);
 
   const upvote = () => {
     const targetMenuIndex= menus.findIndex(menu => menu.name === currentMenu.name)
