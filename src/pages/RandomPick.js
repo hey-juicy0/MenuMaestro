@@ -16,16 +16,19 @@ function RandomRick({ userPick, setUserPick }) {
   const [currentMenu, setCurrentMenu] = useState({});
   const lastMenuNameRef = useRef('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
-  const [voteCount, setVoteCount] = useState(0);
+  const [hasVoted, setHasVoted] = useState(false);
 
   const upvote = () => {
+    if (!hasVoted) {
     const targetMenuIndex= menus.findIndex(menu => menu.name === currentMenu.name)
     const updated = {...currentMenu, lastVote: getToday(), vote: currentMenu.lastVote === getToday() ? currentMenu.vote+1 : 0}
     setCurrentMenu(updated);
     const newMenus = [...menus];
     newMenus.splice(targetMenuIndex, 1, updated)
     set(ref(database, '/menus'), newMenus);
-  }
+    setHasVoted(true);
+    }
+    }
 
 const pickCurrentMenu = ({data, force}) => {
     if (!force && lastMenuNameRef.current !== '') {
@@ -33,7 +36,6 @@ const pickCurrentMenu = ({data, force}) => {
       if (targetMenu) {
         if (getToday() !== targetMenu.lastVote){
           setCurrentMenu(menu => ({...menu, lastVote: getToday(), vote: 0}));
-          setVoteCount(0);
         } else {
           setCurrentMenu(menu => ({...menu, vote: targetMenu.vote }));
         }
@@ -50,7 +52,7 @@ const pickCurrentMenu = ({data, force}) => {
     
     lastMenuNameRef.current = selectedObject.name;
     
-    setCurrentMenu(selectedObject);
+    setCurrentMenu({...selectedObject, lastVote: getToday(), vote: selectedObject.lastVote === getToday() ? selectedObject.vote : 0});
   } 
 
   onValue(newMenuRef, (snapshot) => {
@@ -89,7 +91,9 @@ const pickCurrentMenu = ({data, force}) => {
       <h1 className='section_title'>랜덤</h1>
       <div className="dotted-line-container">
         <div className="dotted-line" />
-        <img className = 'reset' src="https://i.ibb.co/yRggpzD/reset.png" onClick={() => pickCurrentMenu({ data: menus, force: true })} alt="reset" />
+        <img className = 'reset' src="https://i.ibb.co/yRggpzD/reset.png" onClick={() =>{
+          pickCurrentMenu({ data: menus, force: true })
+          setHasVoted(false); }} alt="reset" />
       </div>
       <div className='card_frame'>
         <div className="card_card">
