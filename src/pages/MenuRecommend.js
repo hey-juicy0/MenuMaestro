@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ref, get, set, child, update } from 'firebase/database';
+import { ref, get, update } from 'firebase/database';
 import { useDatabase } from '../contexts';
 import { getToday, getTodayReadable } from '../utils';
 
 import Modal from 'react-modal';
-import Card from 'react-bootstrap/Card';
 
 import '../css/category.css'
 
@@ -18,89 +17,69 @@ function MenuReCommend() {
   const [selectedCategory, setSelectedCategory] = useState(null);       // 선택한 1차 카테고리를 저장
   const [subcategories, setSubcategories] = useState([]);               // 하위 카테고리 종류 설정
   const [selectedSubCategory, setSelectedSubCategory] = useState(null); // 선택된 하위 카테고리 저장
-  const [filteredMenus, setFilteredMenus] = useState([]);
-  const [finalList, setFinalList] = useState([]);                       // 최종 필터링 결과를 저장하는 목록
+  const [filteredMenus, setFilteredMenus] = useState([]);               // 필터링된 메뉴 저장
   const [finalMenu, setFinalMenu] = useState(null);                     // 최종 추천 메뉴 무작위 선정
   
   const [isModalOpen, setIsModalOpen] = useState(false);               // 최종 추천 메뉴 모달 창 보임 상태
-  const [modalMenu, setModalMenu] = useState(null);
-  const [votedMenus, setVotedMenus] = useState({});
-
+  const [modalMenu, setModalMenu] = useState(null);                    // 모달 메뉴 상태 저장
+  const [votedMenus, setVotedMenus] = useState({});                    // 메뉴 추천 상태 저장
 
   const baseCategory = [ "한식", "중식", "일식", "아시안식", "상관없음"]; // 1차 카테고리
 
-  // vote를 위한 전체 메뉴 menus에 저장
+  
   useEffect(() => {
     // 파이어베이스에서 데이터 가져오기
     const fetchData = async () => {
       try {
         const snapshot = await get(dbRef); // 'menus' 참조의 데이터 가져오기
         if (snapshot.exists()) {
-          const data = snapshot.val(); // 스냅샷의 데이터를 변수에 할당
-          setMenus(data); // 가져온 데이터를 menus 상태 변수에 저장
+          const data = snapshot.val(); 
+          setMenus(data);
         }
       } catch (error) {
         console.error('Error fetching menus:', error);
       }
     };
 
-    // 컴포넌트가 처음 마운트될 때 데이터 가져오기
     fetchData();
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 실행
+  }, []); // 첫 마운트에만 실행
 
     
-  // 초기화를 위한 cleanup 함수
+  // 초기화 cleanup 함수
   const cleanup = () => {
     setSelectedCategory(null);
     setSubcategories([]);
     setSelectedSubCategory(null);
-    setFinalList([]);
+
     setFinalMenu(null);
     setIsModalOpen(false);
     setModalMenu(null);
+    setVotedMenus({});
   };
 
-  // useEffect를 사용하여 컴포넌트가 처음 마운트될 때 초기화
   useEffect(() => {
     cleanup(); // 컴포넌트가 처음 마운트될 때 바로 초기화
-    return cleanup; // cleanup 함수를 반환하여 unmount 시에도 실행되도록 함
-  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 실행
+    return cleanup; // unmount 시에도 실행되도록 함
+  }, []); 
 
-
-  // 모달 창 열고 닫기
-  const openModal = useCallback((menu) => {
-    setIsModalOpen(true);
-    setFinalMenu(menu); // 모달로 띄워진 메뉴를 finalMenu로 설정
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    setFinalMenu(null); // 모달이 닫힐 때 finalMenu 초기화
-  }, [])
 
   // 1차 카테고리 온클릭 메소드
   const selectCategory = async (category) => {
     setSelectedCategory(category); // baseCategory 선택
 
     try {
-      const snapshot = await get(dbRef); // 전체 데이터베이스 참조, 스냅샷 생성
+      const snapshot = await get(dbRef); 
       if (snapshot.exists()) {
-        const data = snapshot.val(); // 스냅샷 value를 복사한 뒤
+        const data = snapshot.val();
         const temp = category === '상관없음' ? data : data.filter(menu => menu.nation === category);
-        setFilteredMenus(temp); // 필터링된 메뉴들을 menus 상태로 업데이트
-
-        console.log('Category:', category);
-        console.log('data:', data);
-        console.log('temp:', temp);
-
+        setFilteredMenus(temp); // 필터링된 메뉴들을 filteredMenus 상태로 업데이트
       }
     } catch (error) {
       console.error('Error fetching menus:', error);
     }
-    console.log('1차 filteredMenus:', filteredMenus);
   };
 
-  // 1차 카테고리 세팅
+  // 2차 카테고리 세팅
   useEffect(() => {
     const setSubCategoriesByCategory = (selectedCategory) => {
       switch (selectedCategory) {
@@ -134,13 +113,41 @@ function MenuReCommend() {
   }, [selectedCategory]);
   
 
+  // 모달 창 열고 닫기
+  const openModal = useCallback((menu) => {
+    setIsModalOpen(true);
+    setModalMenu(menu);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setModalMenu(null);
+  }, [])
+
+  // 모달 창에 뜨는 메뉴의 정보 최신 업데이트
+  useEffect(() => {
+    if (modalMenu && modalMenu.id) {
+      const fetchModalMenuData = async () => {
+        try {
+          const menuRef = ref(database, `/menus/${modalMenu.id}`);
+          const snapshot = await get(menuRef);
+          if(snapshot.exists()) {
+            const menuData = snapshot.val();
+            setModalMenu(menuData);
+          }
+        } catch(error) {
+          console.error('Error fetching menu data:', error);
+        }
+      };
+      fetchModalMenuData();
+    }
+  }, [modalMenu]);
+
   // 2차 카테고리 선택에 따른 메뉴 필터링
   const selectSubCategory = useCallback((index) => {
     setSelectedSubCategory(subcategories[index]);
-    console.log('selected Subcategory:', selectedSubCategory);
-    console.log('수신 current filterdmenu:', filteredMenus);
 
-    // 값이 비어 있는 경우에는 더 이상 진행하지 않도록 조건 추가
+    // 값이 비어 있는 경우에는 더 이상 진행하지 않음
     if (!selectedCategory || !subcategories[index] || !filteredMenus.length) {
       return;
     }
@@ -149,12 +156,12 @@ function MenuReCommend() {
         temp = filteredMenus.filter(menu => menu.type === subcategories[index]);
       }
       else {
-        temp = filteredMenus.filter(menu => menu.type === subcategories[index] && menu.nation === selectedCategory);
+        temp = filteredMenus.filter(
+          menu => menu.type === subcategories[index] && menu.nation === selectedCategory);
       }
-      setFinalList(temp);
+      setFilteredMenus(temp);
 
-      console.log('temp:', temp);
-
+      // filteredMenus에서 랜덤으로 메뉴 하나 선택
       if (filteredMenus.length > 0) {
         const randomIndex = Math.floor(Math.random() * temp.length);
         const randomMenu = temp[randomIndex];
@@ -163,45 +170,77 @@ function MenuReCommend() {
       } else {
         setFinalMenu(null);
       }
-    console.log('마지막 filteredMenu:', filteredMenus);
   }, [selectedCategory, subcategories, filteredMenus, openModal]);
 
 
-  // 2차 카테고리 온클릭 메소드
   useEffect(() => {
-    // filteredMenus가 업데이트될 때마다 selectSubCategory 함수 호출
     selectSubCategory(selectedSubCategory);
   }, [filteredMenus, selectSubCategory, selectedSubCategory]);
 
 
-  // RandomPick에 정의된 upvote 함수
+  // 최종 선정 메뉴에 대한 추천 남기기(한 메뉴에 가능한 최대 투표 수: 1일 1회)
   const upvote = async () => {
-    console.log('menus:', menus);
-    if (finalMenu) {
-      const targetMenuIndex = menus.findIndex(menu => menu.name === finalMenu.name)
-      console.log("targetIndex:", targetMenuIndex);
-
-      if(targetMenuIndex !== -1) {
-        const updated = {
-          ...finalMenu,
-          lastVote: getToday(),
-          vote: finalMenu.lastVote === getToday() ? finalMenu.lastVote : (Number(finalMenu.vote) + 1) 
-        };
-        const targetMenuRef = ref(database, `/menus/${targetMenuIndex}`);
-        
-        update(targetMenuRef, { lastVote: updated.lastVote, vote: updated.vote });
-        
-        setVotedMenus(prevState => ({
-          ...prevState,
-          [finalMenu.name]: true,
-        }));
-
-        setFinalMenu(updated);
-      }
-      console.log(finalMenu.vote);
-      console.log('finalList:', finalList);
+    if (!finalMenu) {
+      alert('메뉴를 선택해 주세요.');
+      return;
     }
+
+    // 전체 메뉴에서 최종 메뉴 찾기
+    const targetMenuIndex = menus.findIndex(menu => menu.name === finalMenu.name)
+    if(targetMenuIndex == -1) {
+      return;
+    }
+    
+    const today = getToday();
+    const votedToday = finalMenu.lastVote === today;
+
+    // 하루에 한 번 추천 가능
+    if (!votedMenus[finalMenu.id] && votedToday) {
+      alert('이미 추천되었습니다.');
+      return;
+    }
+
+    const updated = {
+      ...finalMenu,
+      lastVote: getToday(),
+      vote: votedToday ? finalMenu.vote : (Number(finalMenu.vote) + 1) 
+    };
+        
+    const targetMenuRef = ref(database, `/menus/${targetMenuIndex}`);
+    await update(targetMenuRef, { lastVote: updated.lastVote, vote: updated.vote });
+      
+    setVotedMenus(prevState => ({
+      ...prevState,
+      [finalMenu.name]: true,
+    }));
+
+    setFinalMenu(updated);
+    setModalMenu(updated);
+
+    setFilteredMenus(prevList => 
+      prevList.map(item => (item.id === updated.id ? updated : item)));
   };
+
+  useEffect(() => {
+    // finalMenu가 변경될 때마다 실행
+    if (finalMenu && finalMenu.id) {
+      const fetchUpdatedMenuData = async () => {
+        try {
+          const menuRef = ref(database, `/menus/${finalMenu.id}`);
+          const snapshot = await get(menuRef);
+          if (snapshot.exists()) {
+            const updatedMenuData = snapshot.val();
+            // finalMenu 상태를 최신 데이터로 업데이트
+            setFinalMenu(updatedMenuData);
+          }
+        } catch (error) {
+          console.error('Error fetching updated menu data:', error);
+        }
+      };
+  
+      fetchUpdatedMenuData();
+    }
+  }, [finalMenu, database]);
 
   // 리턴 렌더링 부분
   return (
@@ -234,7 +273,7 @@ function MenuReCommend() {
                 </div>
                 {finalMenu && (<p className="menu-description">
                     오늘({getTodayReadable()}) {finalMenu.vote}회의 추천을 받았습니다. &nbsp;
-                    {!votedMenus[finalMenu.name] && (
+                    {!votedMenus[finalMenu.id] && (
                       <img className="vote" src="https://i.ibb.co/4VXmN4x/like-1.png" 
                     width={'40px'} onClick={() => upvote()} />
                     )}
