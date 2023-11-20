@@ -9,11 +9,7 @@ const AddButton = function ({ onNewColor = f => f }) {
   const [titleValue, setTitleValue] = useState("");
   const [detailValue, setDetailValue] = useState("");
   const [dateValue, setDateValue] = useState("");
-  //const [urlValue, setUrlValue] = useState("");
-  //const [imagePreview, setImagePreview] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-
-  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -24,16 +20,9 @@ const AddButton = function ({ onNewColor = f => f }) {
     if (selectedImage) {
       console.log("파일 업로드 시작");
       const storage = getStorage(app); //스토리지 가져오기
-      const storageRef = storageReference(storage, `/FoodBoard/${selectedImage.name}`);
-      console.log("1번");
+      const storageRef = storageReference(storage, 'FoodBoard/' + selectedImage.name);
       await uploadBytes(storageRef, selectedImage);
-      console.log("2번");
       const imageUrl = await getDownloadURL(storageRef);
-      console.log("3번");
-      //setUrlValue(imageUrl);
-      console.log("4번");
-      //setImagePreview(imageUrl);
-      console.log("5번");
       return imageUrl;
     }
     else{
@@ -64,8 +53,6 @@ const AddButton = function ({ onNewColor = f => f }) {
     setTitleValue("");
     setDetailValue("");
     setDateValue("");
-    //setUrlValue("");
-    //setImagePreview("");
     closeModal();
   };
 
@@ -80,17 +67,6 @@ const AddButton = function ({ onNewColor = f => f }) {
   const handleDateChange = (e) => {
     setDateValue(e.target.value);
   };
-
-  // const handleUrlChange = (e) => {
-  //   const imageUrl = e.target.value;
-  //   setUrlValue(imageUrl);
-
-  //   if (imageUrl.startsWith("http") || imageUrl.startsWith("https")) {
-  //     setImagePreview(imageUrl);
-  //   } else {
-  //     setImagePreview("");
-  //   }
-  // };
 
   return (
     <div id="Foodboard">
