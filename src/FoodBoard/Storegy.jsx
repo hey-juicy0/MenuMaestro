@@ -1,68 +1,58 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp, getApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-import { useReducer } from "react";
-import React from 'react';
+import React, { useReducer } from 'react';
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue } from "firebase/database";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAO4pFIqrG_xwJ2_XPjut1IPwjil1LAkck",
-  authDomain: "fooddata-27337.firebaseapp.com",
-  databaseURL: "https://fooddata-27337-default-rtdb.firebaseio.com",
-  projectId: "fooddata-27337",
-  storageBucket: "fooddata-27337.appspot.com",
-  messagingSenderId: "109487157195",
-  appId: "1:109487157195:web:83e75e39ee51debb7b904e"
+  apiKey: "AIzaSyCdGCsFCvfwgJg23ToUNl8KpEiGM41fotY",
+  authDomain: "fooddata-4ddda.firebaseapp.com",
+  databaseURL: "https://fooddata-4ddda-default-rtdb.firebaseio.com",
+  projectId: "fooddata-4ddda",
+  storageBucket: "fooddata-4ddda.appspot.com",
+  messagingSenderId: "216874707741",
+  appId: "1:216874707741:web:ebcb269baea2880e698ff4"
 };
 
-// Check if Firebase app is already initialized
-let app;
-try {
-  app = getApp();
-} catch (e) {
-  app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
+// Define the initial state for the database
+const initialState = database;
+
+// Define the reducer function
+function databaseReducer(state, action) {
+  switch (action.type) {
+    case 'REGISTER_DATABASE':
+      return {
+        ...state,
+        items: [...state.items, action.payload],
+      };
+    case 'WRITE_ITEM':
+      return {
+        ...state,
+        items: state.items.filter((item) => item !== action.payload),
+      };
+    default:
+      return state;
+  }
 }
 
-// // Initialize Firebase database
-// const database = getDatabase(app);
+// Create a context to provide the database and dispatch functions
+const DatabaseContext = React.createContext(initialState);
 
-// const initialState = database;
+// Custom hook to use the database and dispatch functions
+function useDatabase() {
+  return React.useContext(DatabaseContext);
+}
 
-// // Define the reducer function
-// function databaseReducer(state, action) {
-//   switch (action.type) {
-//     case 'REGISTER_DATABASE':
-//       return {
-//         ...state,
-//         items: [...state.items, action.payload],
-//       };
-//     case 'WRITE_ITEM':
-//       return {
-//         ...state,
-//         items: state.items.filter((item) => item !== action.payload),
-//       };
-//     default:
-//       return state;
-//   }
-// }
+// Database provider component
+function DatabaseProvider({ children }) {
+  const [database, dispatch] = useReducer(databaseReducer, initialState);
 
-// // Create a context to provide the database and dispatch functions
-// const DatabaseContext = React.createContext(initialState);
+  return (
+    <DatabaseContext.Provider value={{ database, dispatch }}>
+      {children}
+    </DatabaseContext.Provider>
+  );
+}
 
-// // Custom hook to use the database and dispatch functions
-// function useDatabase() {
-//   return React.useContext(DatabaseContext);
-// }
-
-// // Database provider component
-// function DatabaseProvider({ children }) {
-//   const [database, dispatch] = useReducer(databaseReducer, initialState);
-
-//   return (
-//     <DatabaseContext.Provider value={{ database, dispatch }}>
-//       {children}
-//     </DatabaseContext.Provider>
-//   );
-// }
-
-export { app };
+export { useDatabase, DatabaseProvider };
