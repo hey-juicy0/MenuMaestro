@@ -111,7 +111,7 @@ function App() {
       const currentTime = new Date().getTime();
       const timeDifference = currentTime - lastClosedTimeValue;
   
-      const timeInterval = 1; // 10 * 1000;   // 시간 ms
+      const timeInterval = 10000; // 10 * 1000;   // 시간 ms
   
       if (timeDifference < timeInterval && !doNotShowToday) {
         setShowModal(false);
